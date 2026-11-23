@@ -1,0 +1,141 @@
+<?php
+
+namespace App\Http\Controllers\AdminHR;
+
+use App\Http\Controllers\Controller;
+use App\Models\Designation;
+use App\Models\StateCity;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Department;
+use App\Models\CountryState;
+use App\Models\Leave;
+use Carbon\Carbon;
+use NunoMaduro\Collision\Adapters\Phpunit\State;
+
+class DashboardController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+
+
+    public function index()
+    {
+        // Only Super Admin sees the company-wide dashboard; every other role gets its own page
+        $authUser = Auth::user();
+        if ($authUser && !$authUser->isSuperAdmin()) {
+            $roleName = $authUser->roleModel?->name ?? $authUser->roles->first()?->name ?? 'User';
+            $tree = app(\App\Support\MenuRegistry::class)->treeFor($authUser);
+
+            // no dashboard for these roles: open the first menu page they were given
+            $first = null;
+            $find = function ($nodes) use (&$find, &$first) {
+                foreach ($nodes as $n) {
+                    if ($first) { return; }
+                    if (!empty($n['children'])) { $find($n['children']); continue; }
+                    $url = \App\Support\MenuRegistry::url($n['route'] ?? null);
+                    if ($url !== '#' && ($n['route'] ?? '') !== 'home' && ($n['route'] ?? '') !== 'dashboard') {
+                        $first = $url;
+                    }
+                }
+            };
+            $find($tree);
+            if ($first) {
+                return redirect()->to($first);
+            }
+
+            return view('home.dashboard.role', [
+                'title'    => $roleName . ' Dashboard',
+                'roleName' => $roleName,
+                'menus'    => app(\App\Support\MenuRegistry::class)->treeFor($authUser),
+            ]);
+        }
+
+        $data['role'] = Auth::user()->name;
+        $data['title'] = $data['role'] . ' ' . 'Dashboard';
+        $data['imageUrl'] = "https://picsum.photos/200/200?random=" . rand(1, 1000);
+
+        // 👉 आज की Leave Count
+        $data['todayLeaves'] = Leave::whereDate('created_at', Carbon::today())->count();
+
+        return view('home.dashboard.index', $data);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
+    public function getDepartments($category_id)
+    {
+        $departments = Department::where('category_id', $category_id)
+            ->select('id', 'department_name')
+            ->get();
+
+        return response()->json($departments);
+    }
+    public function getDesignation($department_id)
+    {
+        $departments = Designation::where('department_id', $department_id)
+            ->select('id', 'designation_name')
+            ->get();
+
+        return response()->json($departments);
+    }
+    public function getStates($country_id)
+    {
+        $states = CountryState::where('country_id', $country_id)->get();
+        return response()->json($states);
+    }
+    public function getCities($state_id)
+    {
+        $cities = StateCity::where('state_id', $state_id)->get();
+        return response()->json($cities);
+    }
+
+
+}
