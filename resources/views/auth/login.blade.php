@@ -45,7 +45,7 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
-
+    @include('layout.focus-style')
 </head>
 
 <body class="bg-white">
@@ -175,6 +175,8 @@
                                             <div class="mb-3">
                                                 <button type="submit" class="btn btn-primary w-100">Sign In</button>
                                             </div>
+
+                                            @include('auth.partials.otp-login', ['otpContext'=>'superadmin','otpRoleSlug'=>null,'otpFieldName'=>'email'])
                                             {{-- <div class="text-center">
                                                 <h6 class="fw-normal text-dark mb-0">Don’t have an account?
                                                     <a href="#" class="hover-a"> Create Account</a>

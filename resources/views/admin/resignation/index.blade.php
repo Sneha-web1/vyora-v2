@@ -256,7 +256,7 @@
                                     <td>
                                         <div class="fw-bold text-dark">{{ $res->employee?->employee_name ?? 'Unknown Employee' }}</div>
                                         <div class="text-muted fs-12">{{ $res->employee?->employee_id }} &bull; {{ $res->employee?->designation?->name ?? 'Staff' }}</div>
-                                        <small class="text-muted">{{ $res->employee?->employee_email }}</small>
+                                        <small class="text-muted">{{ \App\Models\Employee::maskEmail($res->employee?->employee_email) }}</small>
                                     </td>
 
                                     <!-- Supervisor & Agency -->

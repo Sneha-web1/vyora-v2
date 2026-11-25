@@ -73,7 +73,7 @@ class ConsistentAttendeesController extends Controller
         if (!empty($search)) {
             $empQuery->where(function ($q) use ($search) {
                 $q->where('employee_name', 'like', "%{$search}%")
-                    ->orWhere('employee_email', 'like', "%{$search}%")
+                    ->orWhereEmployeeContact($search)
                     ->orWhere('employee_id', $search);
             });
         }

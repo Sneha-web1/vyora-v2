@@ -356,7 +356,7 @@ class AttendanceRegisterReportController extends Controller
             $rows[] = [
                 'employee_id'      => $emp->employee_id,
                 'employee_name'    => $emp->employee_name,
-                'employee_email'   => $emp->employee_email,
+                'employee_email'   => \App\Models\Employee::maskEmail($emp->employee_email),
                 'agency_id'        => $emp->agency_id,
                 'agency_name'      => $emp->agency->agency_name ?? 'Direct / In-House',
                 'designation_name' => $emp->designation->name ?? ($emp->designation->designation_name ?? 'Staff'),

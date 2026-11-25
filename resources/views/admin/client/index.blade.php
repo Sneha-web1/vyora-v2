@@ -377,7 +377,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label">Company</label>
+                                            <label class="form-label">Organization</label>
                                             <input type="text" class="form-control" name="company_name">
                                         </div>
                                     </div>

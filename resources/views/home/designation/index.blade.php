@@ -35,7 +35,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sn</th>
-                                            <th>Company Name</th>
+                                            <th>Organization Name</th>
                                             <th>Branch Name</th>
                                             <th>Category Name</th>
                                             <th>Department Name</th>

@@ -337,7 +337,7 @@
                         </div>
                         <div class="logo">
                             @if (!empty($job['company_logo']))
-                                <img src="{{ asset('uploads/company/' . $job['company_logo']) }}" alt="Company Logo"
+                                <img src="{{ asset('uploads/company/' . $job['company_logo']) }}" alt="Organization Logo"
                                     style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
                             @else
                                 <span>{{ strtoupper(substr($job['branch_name'], 0, 1)) }}</span>

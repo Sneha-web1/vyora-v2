@@ -1000,7 +1000,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label">Company<span class="text-danger"> *</span></label>
+                                            <label class="form-label">Organization<span class="text-danger"> *</span></label>
                                             <input type="text" class="form-control">
                                         </div>
                                     </div>
@@ -1695,8 +1695,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label">Company<span class="text-danger"> *</span></label>
-                                            <input type="text" class="form-control" value="Abac Company">
+                                            <label class="form-label">Organization<span class="text-danger"> *</span></label>
+                                            <input type="text" class="form-control" value="Abac Organization">
                                         </div>
                                     </div>
                                     <div class="col-md-6">

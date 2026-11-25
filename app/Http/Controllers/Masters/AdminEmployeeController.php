@@ -55,9 +55,8 @@ class AdminEmployeeController extends Controller
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('employee_name', 'like', "%{$search}%")
-                        ->orWhere('employee_email', 'like', "%{$search}%")
-                        ->orWhere('patId', 'like', "%{$search}%")
-                        ->orWhere('employee_mobile', 'like', "%{$search}%");
+                        ->orWhereEmployeeContact($search)
+                        ->orWhere('patId', 'like', "%{$search}%");
                 });
             }
 
@@ -74,8 +73,8 @@ class AdminEmployeeController extends Controller
                     'DT_RowIndex' => $start + $index + 1,
                     'name' => $emp->employee_name ?? '--',
                     'patId' => $emp->patId ?? '--',
-                    'email' => $emp->employee_email ?? '--',
-                    'phone' => $emp->employee_mobile ?? '--',
+                    'email' => \App\Models\Employee::maskEmail($emp->employee_email) ?? '--',
+                    'phone' => \App\Models\Employee::maskMobile($emp->employee_mobile) ?? '--',
                     'department' => $emp->department ?? '--',
                     'designation' => $emp->designation ?? '--',
                     'status' => $emp->status == 'Active'

@@ -33,11 +33,11 @@
                                 <div class="row">
                                     <!-- Company -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_id">Company Name *</label>
+                                        <label class="form-label" for="company_id">Organization Name *</label>
                                         <select class="form-control select2" id="company_id" name="company_id" required>
-                                            <option value="">Select Company</option>
-                                            @foreach ($compneys as $compney)
-                                                 <option value="{{ $compney->id }}">{{ $compney->company_name }}</option>
+                                            <option value="">Select Organization</option>
+                                            @foreach ($companies as $compney)
+                                                 <option value="{{ $compney->id }}" {{ old('company_id', $loop->count === 1 ? $compney->id : null) == $compney->id ? 'selected' : '' }}>{{ $compney->company_name }}</option>
                                             @endforeach
                                         </select>
 

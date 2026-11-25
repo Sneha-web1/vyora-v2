@@ -239,7 +239,10 @@ class AgencyController extends Controller
             'contact_person' => 'nullable|string|max:255',
             'email'          => 'nullable|email|max:255',
             'phone'          => 'nullable|string|max:50',
+            'landline_no'    => 'nullable|string|max:20',
+            'gst_no'         => 'nullable|string|max:20',
             'address'        => 'nullable|string',
+            'office_pincode' => 'nullable|string|max:10',
             'country_id'     => 'nullable|integer|exists:countries,id',
             'state_id'       => 'nullable|integer|exists:country_states,id',
             'city_id'        => 'nullable|integer|exists:state_cities,id',
@@ -300,7 +303,10 @@ class AgencyController extends Controller
             'contact_person' => 'nullable|string|max:255',
             'email'          => 'nullable|email|max:255',
             'phone'          => 'nullable|string|max:50',
+            'landline_no'    => 'nullable|string|max:20',
+            'gst_no'         => 'nullable|string|max:20',
             'address'        => 'nullable|string',
+            'office_pincode' => 'nullable|string|max:10',
             'country_id'     => 'nullable|integer|exists:countries,id',
             'state_id'       => 'nullable|integer|exists:country_states,id',
             'city_id'        => 'nullable|integer|exists:state_cities,id',
@@ -390,8 +396,7 @@ class AgencyController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('employee_name', 'like', "%{$search}%")
-                    ->orWhere('employee_email', 'like', "%{$search}%")
-                    ->orWhere('employee_mobile', 'like', "%{$search}%");
+                    ->orWhereEmployeeContact($search);
             });
         }
 

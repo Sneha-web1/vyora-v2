@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -42,8 +43,9 @@ class EmployeeAuthController extends Controller
 
         $credentials = [
             ['patId' => $loginInput],
-            ['employee_email' => $loginInput],
-            ['employee_mobile' => $loginInput],
+            // email / mobile are encrypted at rest (DPDP) -> look up via blind index
+            ['employee_email_bidx'  => Employee::blindIndex($loginInput, 'email') ?? '__none__'],
+            ['employee_mobile_bidx' => Employee::blindIndex($loginInput, 'mobile') ?? '__none__'],
         ];
 
         foreach ($credentials as $field) {

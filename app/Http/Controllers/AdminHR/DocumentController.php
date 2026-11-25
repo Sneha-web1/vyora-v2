@@ -92,7 +92,7 @@ class DocumentController extends Controller
                         ->orWhere('document_type', 'like', "%{$search}%")
                         ->orWhereHas('employee', function ($eq) use ($search) {
                             $eq->where('employee_name', 'like', "%{$search}%")
-                                ->orWhere('employee_email', 'like', "%{$search}%");
+                                ->orWhereEmployeeContact($search);
                         });
                 });
             }

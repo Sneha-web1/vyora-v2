@@ -134,7 +134,9 @@
                         <div class="row mb-3">
                             <div class="col-md-4 mb-3"><div class="text-muted small">Contact Person</div><div class="fw-medium" id="v_contact_person"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">Phone</div><div class="fw-medium" id="v_phone"></div></div>
+                            <div class="col-md-4 mb-3"><div class="text-muted small">Landline</div><div class="fw-medium" id="v_landline_no"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">Email</div><div class="fw-medium" id="v_email"></div></div>
+                            <div class="col-md-4 mb-3"><div class="text-muted small">GST No</div><div class="fw-medium" id="v_gst_no"></div></div>
                         </div>
 
                         <h6 class="mb-3">Address</h6>
@@ -143,6 +145,7 @@
                             <div class="col-md-4 mb-3"><div class="text-muted small">Country</div><div class="fw-medium" id="v_country"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">State</div><div class="fw-medium" id="v_state"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">City</div><div class="fw-medium" id="v_city"></div></div>
+                            <div class="col-md-4 mb-3"><div class="text-muted small">Office Pincode</div><div class="fw-medium" id="v_office_pincode"></div></div>
                         </div>
 
                         <h6 class="mb-3">Other Information</h6>
@@ -284,7 +287,7 @@
 
             $.get(BASE + '/view/' + id, function(res) {
                 const a = res.agency;
-                ['agency_name', 'agency_code', 'contact_person', 'phone', 'email', 'address', 'country', 'city', 'state', 'notes', 'employees_count']
+                ['agency_name', 'agency_code', 'contact_person', 'phone', 'landline_no', 'email', 'gst_no', 'address', 'office_pincode', 'country', 'city', 'state', 'notes', 'employees_count']
                     .forEach(function(f) { $('#v_' + f).text(dash(a[f])); });
                 $('#v_created_at').text(res.meta.created_at);
                 $('#v_updated_at').text(res.meta.updated_at);

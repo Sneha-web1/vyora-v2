@@ -198,7 +198,7 @@
                                             @php
                                                 $jobQualifications = (array) $job->qualifications;
                                             @endphp
-                                            @foreach (['High School', 'Diploma', 'Post Graduation', 'PhD', 'Certification Course', 'ITI', 'Polytechnic', 'Vocational Training', 'Diploma in Management', 'Professional Course', 'Chartered Accountant (CA)', 'Cost & Management Accountant (CMA)', 'Certified Financial Analyst (CFA)', 'Company Secretary (CS)', 'Finance Diploma / Certification', 'Other'] as $qualification)
+                                            @foreach (['High School', 'Diploma', 'Post Graduation', 'PhD', 'Certification Course', 'ITI', 'Polytechnic', 'Vocational Training', 'Diploma in Management', 'Professional Course', 'Chartered Accountant (CA)', 'Cost & Management Accountant (CMA)', 'Certified Financial Analyst (CFA)', 'Organization Secretary (CS)', 'Finance Diploma / Certification', 'Other'] as $qualification)
                                                 <option value="{{ $qualification }}"
                                                     {{ in_array($qualification, $jobQualifications) ? 'selected' : '' }}>
                                                     {{ $qualification }}

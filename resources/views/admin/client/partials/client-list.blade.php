@@ -56,7 +56,7 @@
 
                     <div class="d-flex align-items-center justify-content-between border-top pt-3 mt-3">
                         <div>
-                            <p class="mb-1 fs-12">Company</p>
+                            <p class="mb-1 fs-12">Organization</p>
                             <h6 class="fw-normal text-truncate">
                                 {{ $client->company_name ?? 'N/A' }}
                             </h6>

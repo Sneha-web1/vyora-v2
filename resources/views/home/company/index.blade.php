@@ -17,12 +17,14 @@
                     </nav>
                 </div>
                 <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-                    <div class="mb-2">
-                        <a href="{{ route('masters.organisation.company.create') }}"
-                            class="btn btn-primary d-flex align-items-center">
-                            <i class="ti ti-circle-plus me-2"></i> Add Company
-                        </a>
-                    </div>
+                    @if (!($companyExists ?? false))
+                        <div class="mb-2">
+                            <a href="{{ route('masters.organisation.company.create') }}"
+                                class="btn btn-primary d-flex align-items-center">
+                                <i class="ti ti-circle-plus me-2"></i> Add Organization
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="card">
@@ -35,9 +37,9 @@
                                         <thead>
                                             <tr>
                                                 <th>Sn</th>
-                                                <th>Company Logo</th>
-                                                <th>Company Name</th>
-                                                <th>Company Code</th>
+                                                <th>Organization Logo</th>
+                                                <th>Organization Name</th>
+                                                <th>Organization Code</th>
                                                 <th>Contact No</th>
                                                 <th>Email</th>
                                                 <th>Status</th>
@@ -79,7 +81,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Company Details</h5>
+                        <h5 class="modal-title">Organization Details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -109,8 +111,10 @@
                             <div class="row mb-3">
                                 <div class="col-md-3 col-6 mb-3"><div class="text-muted small">GST No</div><div class="fw-medium" id="v_gst_no"></div></div>
                                 <div class="col-md-3 col-6 mb-3"><div class="text-muted small">PAN No</div><div class="fw-medium" id="v_pan_no"></div></div>
+                                <div class="col-md-3 col-6 mb-3"><div class="text-muted small">TAN No</div><div class="fw-medium" id="v_tan_no"></div></div>
                                 <div class="col-md-3 col-6 mb-3"><div class="text-muted small">CIN No</div><div class="fw-medium" id="v_cin_no"></div></div>
                                 <div class="col-md-3 col-6 mb-3"><div class="text-muted small">IEC</div><div class="fw-medium" id="v_iec"></div></div>
+                                <div class="col-md-3 col-6 mb-3"><div class="text-muted small">DUNS No</div><div class="fw-medium" id="v_duns_no"></div></div>
                             </div>
 
                             <h6 class="mb-3">Address</h6>
@@ -192,10 +196,10 @@
                     $('#viewLoader').show();
                     $('#view_modal').modal('show');
 
-                    $.get("{{ url('master/company/view') }}/" + id, function(c) {
+                    $.get("{{ url('master/organization/view') }}/" + id, function(c) {
                         var dash = function(v) { return (v === null || v === undefined || v === '') ? '--' : v; };
-                        var fields = ['company_name', 'company_code', 'contact_no', 'landline_no', 'gst_no', 'pan_no',
-                            'cin_no', 'iec', 'address', 'country', 'state', 'city', 'pincode', 'created_at', 'updated_at'
+                        var fields = ['company_name', 'company_code', 'contact_no', 'landline_no', 'gst_no', 'pan_no', 'tan_no',
+                            'cin_no', 'iec', 'duns_no', 'address', 'country', 'state', 'city', 'pincode', 'created_at', 'updated_at'
                         ];
                         fields.forEach(function(f) { $('#v_' + f).text(dash(c[f])); });
 
@@ -213,7 +217,7 @@
                         $('#viewContent').show();
                     }).fail(function() {
                         $('#view_modal').modal('hide');
-                        alert('Company details load nahi ho paaye!');
+                        alert('Organization details load nahi ho paaye!');
                     });
                 }
 
@@ -225,7 +229,7 @@
                 $('#confirmDeleteBtn').click(function() {
                     var id = $('#deleteCompanyId').val();
                     $.ajax({
-                        url: "{{ url('master/company/delete') }}/" + id,
+                        url: "{{ url('master/organization/delete') }}/" + id,
                         type: 'DELETE',
                         data: {
                             _token: "{{ csrf_token() }}"

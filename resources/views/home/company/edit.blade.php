@@ -13,11 +13,11 @@
                         <div class="card-header">
                             <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
                                 <div class="my-auto mb-2">
-                                    <h2 class="mb-1">Edit Company</h2>
+                                    <h2 class="mb-1">Edit Organization</h2>
                                     <nav>
                                         <ol class="breadcrumb mb-0">
                                             <li class="breadcrumb-item">
-                                                Master / Organisation / Company / Edit
+                                                Masters / Organization / Edit
                                             </li>
                                         </ol>
                                     </nav>
@@ -25,7 +25,7 @@
                                 <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
                                     <div class="mb-2">
                                         <a href="{{ route('masters.organisation.company') }}" class="btn btn-primary">
-                                            Company List
+                                            Organization List
                                         </a>
                                     </div>
                                 </div>
@@ -42,8 +42,12 @@
 
                                     <!-- Company Logo -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Company Logo</label>
-                                        <input type="file" class="form-control" name="company_logo">
+                                        <label class="form-label">Organization Logo</label>
+                                        <input type="file" class="form-control @error('company_logo') is-invalid @enderror" id="company_logo"
+                                            name="company_logo" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                                            data-max-size="2097152">
+                                        <small class="text-muted">PNG, JPG or JPEG. Max size 2 MB.</small>
+                                        <div class="invalid-feedback d-block" id="company_logo_error">@error('company_logo'){{ $message }}@enderror</div>
                                         @if ($company->company_logo)
                                             <img src="{{ asset('uploads/company/' . $company->company_logo) }}"
                                                 class="mt-2" width="80">
@@ -52,14 +56,14 @@
 
                                     <!-- Company Name -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Company Name *</label>
+                                        <label class="form-label">Organization Name *</label>
                                         <input type="text" class="form-control" name="company_name"
                                             value="{{ old('company_name', $company->company_name) }}" required>
                                     </div>
 
                                     <!-- Company Code -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Company Code *</label>
+                                        <label class="form-label">Organization Code *</label>
                                         <input type="text" class="form-control" name="company_code"
                                             value="{{ old('company_code', $company->company_code) }}" required>
                                     </div>
@@ -85,7 +89,7 @@
                                             value="{{ old('email', $company->email) }}" required>
                                     </div>
 
-                                    <!-- GST, PAN, CIN, IEC, Website -->
+                                    <!-- GST, PAN, TAN, CIN, IEC, DUNS, Website -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">GST Number</label>
                                         <input type="text" class="form-control" name="gst_no"
@@ -95,6 +99,11 @@
                                         <label class="form-label">PAN Number</label>
                                         <input type="text" class="form-control" name="pan_no"
                                             value="{{ old('pan_no', $company->pan_no) }}">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">TAN Number</label>
+                                        <input type="text" class="form-control" name="tan_no"
+                                            value="{{ old('tan_no', $company->tan_no) }}">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">CIN Number</label>
@@ -107,18 +116,16 @@
                                             value="{{ old('iec', $company->iec) }}">
                                     </div>
                                     <div class="col-md-4 mb-3">
+                                        <label class="form-label">DUNS Number</label>
+                                        <input type="text" class="form-control" name="duns_no"
+                                            value="{{ old('duns_no', $company->duns_no) }}">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <label class="form-label">Website</label>
                                         <input type="text" class="form-control" name="website"
                                             value="{{ old('website', $company->website) }}">
                                     </div>
 
-                                    <!-- Address -->
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Address *</label>
-                                        <textarea class="form-control" name="address" rows="2" required>{{ old('address', $company->address) }}</textarea>
-                                    </div>
-
-                                    <!-- Country -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Country *</label>
                                         <select id="country" name="country" class="form-control select2" required>
@@ -132,7 +139,6 @@
                                         </select>
                                     </div>
 
-                                    <!-- State -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">State *</label>
                                         <select id="state" name="state" class="form-control select2" required>
@@ -140,7 +146,6 @@
                                         </select>
                                     </div>
 
-                                    <!-- City -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">City *</label>
                                         <select id="city" name="city" class="form-control select2" required>
@@ -148,7 +153,11 @@
                                         </select>
                                     </div>
 
-                                    <!-- Pin Code -->
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">Address *</label>
+                                        <textarea class="form-control" name="address" rows="2" required>{{ old('address', $company->address) }}</textarea>
+                                    </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Pin Code *</label>
                                         <input type="text" class="form-control" name="pincode"
@@ -179,7 +188,7 @@
                                         <i class="ti ti-x me-1"></i> Cancel
                                     </button>
                                     <button class="btn btn-primary" type="submit">
-                                        <i class="ti ti-device-floppy me-1"></i> Update Company
+                                        <i class="ti ti-device-floppy me-1"></i> Update Organization
                                     </button>
                                 </div>
 
@@ -196,6 +205,24 @@
 @endsection
 
 @push('after_scripts')
+    <script>
+        // Organization logo: max 2 MB, PNG/JPG/JPEG only
+        $(document).on('change', '#company_logo', function() {
+            var input = this, err = $('#company_logo_error'), file = input.files && input.files[0];
+            err.text('');
+            $(input).removeClass('is-invalid');
+            if (!file) return;
+            var okType = ['image/png', 'image/jpeg'].indexOf(file.type) !== -1;
+            if (!okType) {
+                err.text('Organization logo must be a PNG, JPG or JPEG file.');
+            } else if (file.size > 2 * 1024 * 1024) {
+                err.text('Organization logo must not be larger than 2 MB.');
+            }
+            if (err.text()) {
+                $(input).addClass('is-invalid').val('');
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
             let selectedCountry = "{{ old('country', $company->country) }}";

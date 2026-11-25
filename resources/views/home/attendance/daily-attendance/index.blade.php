@@ -534,7 +534,7 @@
                                                 <div>
                                                     <div class="fw-bold text-dark fs-13">{{ $emp->employee_name }}</div>
                                                     <div class="fs-11 text-muted">
-                                                        <i class="ti ti-mail me-1"></i>{{ $emp->employee_email }} &bull; <span class="text-secondary font-monospace">#{{ $emp->employee_id }}</span>
+                                                        <i class="ti ti-mail me-1"></i>{{ $emp->masked_email }} &bull; <span class="text-secondary font-monospace">#{{ $emp->employee_id }}</span>
                                                     </div>
                                                 </div>
                                             </div>

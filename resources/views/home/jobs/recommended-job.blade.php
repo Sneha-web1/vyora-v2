@@ -193,7 +193,7 @@
                     </div>
                     <div class="logo-box">
                         @if ($job->company_logo && file_exists(public_path('uploads/company/' . $job->company_logo)))
-                            <img src="{{ asset('uploads/company/' . $job->company_logo) }}" alt="Company Logo">
+                            <img src="{{ asset('uploads/company/' . $job->company_logo) }}" alt="Organization Logo">
                         @else
                             <span>{{ strtoupper(substr($job->branchName ?? 'C', 0, 1)) }}</span>
                         @endif

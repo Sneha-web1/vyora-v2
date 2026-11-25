@@ -236,7 +236,7 @@
         <div class="page-wrapper">
         <div class="content">
 
-            {{-- Header & Breadcrumbs (same pattern as Company / Agency masters) --}}
+            {{-- Header & Breadcrumbs (same pattern as Organization / Agency masters) --}}
             <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
                 <div class="my-auto mb-2">
                     <h2 class="mb-1">{{ $title ?? 'Employee Directory' }}</h2>
@@ -480,7 +480,7 @@
                         </a>
                     </div>
                     <h6 class="fw-bold text-dark mb-0.5" id="empAgencyTitle">Direct / In-House</h6>
-                    <p class="text-muted fs-12 mb-0" id="empAgencySubtitle">Company Staff Member</p>
+                    <p class="text-muted fs-12 mb-0" id="empAgencySubtitle">Organization Staff Member</p>
                 </div>
 
                 <!-- Employment & Organization Details Card -->
@@ -913,7 +913,7 @@
                     } else {
                         $('#empAgencyHeaderBadge').html(`<i class="ti ti-building-community me-1"></i>Direct / In-House`).show();
                         $('#empAgencyTitle').text('Direct / In-House');
-                        $('#empAgencySubtitle').text('Internal Company Employees (No Agency)');
+                        $('#empAgencySubtitle').text('Internal Organization Employees (No Agency)');
                     }
 
                     // Supervisor & Hierarchy
@@ -973,17 +973,10 @@
                     $('#empStatusDot').css('background-color', isActive ? '#03c95a' : '#e70d0d');
 
                     // Quick Actions
-                    if (emp.employee_mobile) {
-                        $('#quickCallBtn').attr('href', `tel:${emp.employee_mobile}`).removeClass('disabled opacity-50');
-                    } else {
-                        $('#quickCallBtn').attr('href', 'javascript:void(0);').addClass('disabled opacity-50');
-                    }
+                    // DPDP: number is masked, so the quick-call / quick-mail shortcuts are disabled
+                    $('#quickCallBtn').attr('href', 'javascript:void(0);').addClass('disabled opacity-50');
 
-                    if (emp.employee_email) {
-                        $('#quickEmailBtn').attr('href', `mailto:${emp.employee_email}`).removeClass('disabled opacity-50');
-                    } else {
-                        $('#quickEmailBtn').attr('href', 'javascript:void(0);').addClass('disabled opacity-50');
-                    }
+                    $('#quickEmailBtn').attr('href', 'javascript:void(0);').addClass('disabled opacity-50');
 
                     const monthReportUrl = `{{ route('attendance.register.index') }}?employee_id=${emp.employee_id}`;
                     $('#quickReportBtn').attr('href', monthReportUrl);

@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return '/' . $slug . '/login';
             }
 
-            return $request->is('employee/*') ? '/employee/login' : '/';
+            return $request->is('employee/*') ? '/employee/login' : '/superadmin/login';
         });
 
         $middleware->alias([

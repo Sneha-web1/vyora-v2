@@ -12,11 +12,11 @@
                             <!-- Breadcrumb -->
                             <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
                                 <div class="my-auto mb-2">
-                                    <h2 class="mb-1">Company</h2>
+                                    <h2 class="mb-1">Organization</h2>
                                     <nav>
                                         <ol class="breadcrumb mb-0">
                                             <li class="breadcrumb-item" aria-current="page">
-                                                Master / Organisation / Company / Create
+                                                Masters / Organization / Create
                                             </li>
                                         </ol>
                                     </nav>
@@ -25,7 +25,7 @@
                                     <div class="mb-2">
                                         <a href="{{ route('masters.organisation.company') }}"
                                             class="btn btn-primary d-flex align-items-center">
-                                            <i class="ti ti-circle-plus me-2"></i>Company List
+                                            <i class="ti ti-circle-plus me-2"></i>Organization List
                                         </a>
                                     </div>
                                 </div>
@@ -40,23 +40,27 @@
                                 <div class="form-row row">
                                     <!-- Company Logo (Optional) -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_logo">Company Logo</label>
-                                        <input type="file" class="form-control" id="company_logo" name="company_logo">
+                                        <label class="form-label" for="company_logo">Organization Logo</label>
+                                        <input type="file" class="form-control @error('company_logo') is-invalid @enderror" id="company_logo"
+                                            name="company_logo" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                                            data-max-size="2097152">
+                                        <small class="text-muted">PNG, JPG or JPEG. Max size 2 MB.</small>
+                                        <div class="invalid-feedback d-block" id="company_logo_error">@error('company_logo'){{ $message }}@enderror</div>
                                     </div>
 
                                     <!-- Company Name (Required) -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_name">Company Name *</label>
+                                        <label class="form-label" for="company_name">Organization Name *</label>
                                         <input type="text" class="form-control" id="company_name" name="company_name"
-                                            placeholder="Enter Company Name" required>
+                                            placeholder="Enter Organization Name" required>
                                         <div class="invalid-feedback">Please enter company name.</div>
                                     </div>
 
                                     <!-- Company Code (Optional) -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_code">Company Code</label>
+                                        <label class="form-label" for="company_code">Organization Code</label>
                                         <input type="text" class="form-control" id="company_code" name="company_code"
-                                            placeholder="Enter Company Code">
+                                            placeholder="Enter Organization Code">
                                     </div>
 
                                     <!-- Contact Number (Required) -->
@@ -78,11 +82,11 @@
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="email">Email *</label>
                                         <input type="email" class="form-control" id="email" name="email"
-                                            placeholder="Enter Company Email" required>
+                                            placeholder="Enter Organization Email" required>
                                         <div class="invalid-feedback">Please enter a valid email.</div>
                                     </div>
 
-                                    <!-- GST, PAN, CIN, IEC (Optional) -->
+                                    <!-- GST, PAN, TAN, CIN, IEC, DUNS (Optional) -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="gst_no">GST Number</label>
                                         <input type="text" class="form-control" id="gst_no" name="gst_no"
@@ -94,6 +98,11 @@
                                             placeholder="Enter PAN Number">
                                     </div>
                                     <div class="col-md-4 mb-3">
+                                        <label class="form-label" for="tan_no">TAN Number</label>
+                                        <input type="text" class="form-control" id="tan_no" name="tan_no"
+                                            value="{{ old('tan_no') }}" placeholder="Enter TAN Number">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <label class="form-label" for="cin_no">CIN Number</label>
                                         <input type="text" class="form-control" id="cin_no" name="cin_no"
                                             placeholder="Enter CIN Number">
@@ -103,6 +112,11 @@
                                         <input type="text" class="form-control" id="iec" name="iec"
                                             placeholder="Enter IEC Number">
                                     </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label" for="duns_no">DUNS Number</label>
+                                        <input type="text" class="form-control" id="duns_no" name="duns_no"
+                                            value="{{ old('duns_no') }}" placeholder="Enter DUNS Number">
+                                    </div>
 
                                     <!-- Website (Optional) -->
                                     <div class="col-md-4 mb-3">
@@ -111,14 +125,6 @@
                                             placeholder="Enter Website URL">
                                     </div>
 
-                                    <!-- Address (Required) -->
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="address">Address *</label>
-                                        <textarea class="form-control" id="address" name="address" rows="2" placeholder="Enter Address" required></textarea>
-                                        <div class="invalid-feedback">Please enter address.</div>
-                                    </div>
-
-                                    <!-- Country / State / City (Required) -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="country">Country *</label>
                                         <select class="form-control select2" id="country" name="country" required>
@@ -129,6 +135,7 @@
                                         </select>
                                         <div class="invalid-feedback">Please select country.</div>
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="state">State *</label>
                                         <select class="form-control select2" id="state" name="state" required>
@@ -136,6 +143,7 @@
                                         </select>
                                         <div class="invalid-feedback">Please select state.</div>
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="city">City *</label>
                                         <select class="form-control select2" id="city" name="city" required>
@@ -144,8 +152,13 @@
                                         <div class="invalid-feedback">Please select city.</div>
                                     </div>
 
-                                    <!-- Pin Code -->
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label" for="address">Address *</label>
+                                        <textarea class="form-control" id="address" name="address" rows="2" placeholder="Enter Address" required></textarea>
+                                        <div class="invalid-feedback">Please enter address.</div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
                                         <label class="form-label" for="pincode">Pin Code *</label>
                                         <input type="text" class="form-control" id="pincode" name="pincode"
                                             placeholder="Enter Pin Code" required>
@@ -172,7 +185,7 @@
                                         <i class="ti ti-x me-1"></i> Cancel
                                     </button>
                                     <button class="btn btn-primary" type="submit">
-                                        <i class="ti ti-device-floppy me-1"></i> Save Company
+                                        <i class="ti ti-device-floppy me-1"></i> Save Organization
                                     </button>
                                 </div>
                             </form>
@@ -192,6 +205,24 @@
 
 @endsection
 @push('after_scripts')
+    <script>
+        // Organization logo: max 2 MB, PNG/JPG/JPEG only
+        $(document).on('change', '#company_logo', function() {
+            var input = this, err = $('#company_logo_error'), file = input.files && input.files[0];
+            err.text('');
+            $(input).removeClass('is-invalid');
+            if (!file) return;
+            var okType = ['image/png', 'image/jpeg'].indexOf(file.type) !== -1;
+            if (!okType) {
+                err.text('Organization logo must be a PNG, JPG or JPEG file.');
+            } else if (file.size > 2 * 1024 * 1024) {
+                err.text('Organization logo must not be larger than 2 MB.');
+            }
+            if (err.text()) {
+                $(input).addClass('is-invalid').val('');
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
             // On page load, if country is already selected, fetch states

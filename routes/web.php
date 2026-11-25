@@ -102,14 +102,14 @@ Route::middleware(['auth', 'menu.access'])->group(function () {
     Route::get('/dashboard', [HumanResourceController::class, 'index'])->name('dashboard');
     // Job Categories
     // Master/Organisation/Company
-    Route::get('master/company', [CompanyController::class, 'index'])->name('masters.organisation.company');
-    Route::get('master/company/create', [CompanyController::class, 'create'])->name('masters.organisation.company.create');
-    Route::post('master/company/store', [CompanyController::class, 'store'])->name('masters.organisation.company.store');
-    Route::get('master/company/list', [CompanyController::class, 'list'])->name('masters.organisation.company.list');
-    Route::get('master/company/view/{id}', [CompanyController::class, 'show'])->name('masters.organisation.company.view');
-    Route::get('master/company/edit/{id}', [CompanyController::class, 'edit'])->name('masters.organisation.company.edit');
-    Route::put('master/company/update/{id}', [CompanyController::class, 'update'])->name('masters.organisation.company.update');
-    Route::delete('master/company/delete/{id}', [CompanyController::class, 'destroy'])->name('masters.organisation.company.delete');
+    Route::get('master/organization', [CompanyController::class, 'index'])->name('masters.organisation.company');
+    Route::get('master/organization/create', [CompanyController::class, 'create'])->name('masters.organisation.company.create');
+    Route::post('master/organization/store', [CompanyController::class, 'store'])->name('masters.organisation.company.store');
+    Route::get('master/organization/list', [CompanyController::class, 'list'])->name('masters.organisation.company.list');
+    Route::get('master/organization/view/{id}', [CompanyController::class, 'show'])->name('masters.organisation.company.view');
+    Route::get('master/organization/edit/{id}', [CompanyController::class, 'edit'])->name('masters.organisation.company.edit');
+    Route::put('master/organization/update/{id}', [CompanyController::class, 'update'])->name('masters.organisation.company.update');
+    Route::delete('master/organization/delete/{id}', [CompanyController::class, 'destroy'])->name('masters.organisation.company.delete');
 
     // Master/Organisation/Branch
     Route::get('master/branch', [BranchController::class, 'index'])->name('masters.organisation.branch');
@@ -465,8 +465,16 @@ Route::middleware(['auth', 'menu.access'])->group(function () {
 });
 
 
-Route::get('/', [AuthController::class, 'index'])->name('login.form');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/', function () {
+    return redirect('/superadmin/login');
+});
+// Email-OTP login (Super Admin, every role panel, Employee)
+Route::post('/login-otp/send', [\App\Http\Controllers\Auth\OtpLoginController::class, 'send'])
+    ->middleware('throttle:6,1')->name('login.otp.send');
+Route::post('/login-otp/verify', [\App\Http\Controllers\Auth\OtpLoginController::class, 'verify'])
+    ->middleware('throttle:10,1')->name('login.otp.verify');
+Route::get('/superadmin/login', [AuthController::class, 'index'])->name('login.form');
+Route::post('/superadmin/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // // Employee
@@ -516,6 +524,17 @@ Route::prefix('employee')->middleware('auth:employee')->group(function () {
 
     // Attendance & Holidayssettings
     Route::get('attendance', [AttendanceCotroller::class, 'index'])->name('employee.attendance');
+    Route::post('attendance/punch', [AttendanceCotroller::class, 'punch'])->name('employee.attendance.punch');
+    Route::get('attendance/register', [AttendanceCotroller::class, 'register'])->name('employee.attendance.register');
+
+    // Resignation & Exit Management
+    Route::prefix('resignation')->name('employee.resignation.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Employee\EmployeeResignationController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Employee\EmployeeResignationController::class, 'create'])->name('create');
+        Route::post('/store', [\App\Http\Controllers\Employee\EmployeeResignationController::class, 'store'])->name('store');
+        Route::get('/{id}', [\App\Http\Controllers\Employee\EmployeeResignationController::class, 'show'])->name('show');
+        Route::post('/{id}/withdraw', [\App\Http\Controllers\Employee\EmployeeResignationController::class, 'withdraw'])->name('withdraw');
+    });
     Route::get('holidays', [AttendanceController::class, 'holidayList'])->name('employee.holidays');
 
     // Performance

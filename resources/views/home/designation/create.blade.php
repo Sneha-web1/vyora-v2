@@ -38,11 +38,11 @@
 
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_id">Select Company <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="company_id">Select Organization <span class="text-danger">*</span></label>
                                         <select class="form-control select2" id="company_id" name="company_id" required>
-                                            <option value="">Select Company</option>
+                                            <option value="">Select Organization</option>
                                             @foreach ($companies as $company)
-                                                <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
+                                                <option value="{{ $company->id }}" {{ old('company_id', $loop->count === 1 ? $company->id : null) == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -167,9 +167,9 @@
             $('#branch_id').on('change', function() {
                 loadDepartments($('#company_id').val(), $(this).val(), null);
             });
-            @if (old('company_id'))
-                loadBranches("{{ old('company_id') }}", "{{ old('branch_id') }}");
-                loadDepartments("{{ old('company_id') }}", "{{ old('branch_id') }}", "{{ old('department_id') }}");
+            @if ($preCompanyId = old('company_id', $companies->count() === 1 ? $companies->first()->id : null))
+                loadBranches("{{ $preCompanyId }}", "{{ old('branch_id') }}");
+                loadDepartments("{{ $preCompanyId }}", "{{ old('branch_id') }}", "{{ old('department_id') }}");
             @endif
         });
     </script>

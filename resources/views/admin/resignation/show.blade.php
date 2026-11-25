@@ -223,12 +223,12 @@
 
                         <div class="fs-13 mb-2">
                             <span class="text-muted">Email:</span>
-                            <strong class="text-dark d-block">{{ $resignation->employee?->employee_email }}</strong>
+                            <strong class="text-dark d-block">{{ \App\Models\Employee::maskEmail($resignation->employee?->employee_email) }}</strong>
                         </div>
 
                         <div class="fs-13 mb-0">
                             <span class="text-muted">Mobile:</span>
-                            <strong class="text-dark d-block">{{ $resignation->employee?->employee_mobile ?? 'N/A' }}</strong>
+                            <strong class="text-dark d-block">{{ \App\Models\Employee::maskMobile($resignation->employee?->employee_mobile) ?? 'N/A' }}</strong>
                         </div>
                     </div>
                 </div>
@@ -274,7 +274,7 @@
                             <label class="text-muted fs-11 text-uppercase fw-semibold">Supervisor</label>
                             <div class="fs-13 fw-semibold text-dark">
                                 {{ $resignation->supervisor?->employee_name ?? 'Assigned Supervisor' }}
-                                <span class="d-block text-muted fs-12">{{ $resignation->supervisor?->employee_email ?? 'No email on record' }}</span>
+                                <span class="d-block text-muted fs-12">{{ \App\Models\Employee::maskEmail($resignation->supervisor?->employee_email) ?? 'No email on record' }}</span>
                             </div>
                         </div>
 

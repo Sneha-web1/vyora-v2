@@ -212,7 +212,7 @@
                                     <h5 class="text-white mb-1">{{ Auth::guard('employee')->user()->employee_name }}
                                     </h5>
                                     <div class="d-flex align-items-center">
-                                        <p class="text-white fs-12 mb-0">Senior Manager & Company Secretary</p>
+                                        <p class="text-white fs-12 mb-0">Senior Manager & Organization Secretary</p>
                                         <span class="mx-1"><!-- resources/views/layouts/partials/status-dot.blade.php -->
 
                                             @auth

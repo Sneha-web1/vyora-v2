@@ -39,9 +39,9 @@
 
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_id">Select Company <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="company_id">Select Organization <span class="text-danger">*</span></label>
                                         <select class="form-control select2" id="company_id" name="company_id" required>
-                                            <option value="">Select Company</option>
+                                            <option value="">Select Organization</option>
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}" {{ old('company_id', $designation->company_id) == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
                                             @endforeach

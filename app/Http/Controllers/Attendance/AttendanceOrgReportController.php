@@ -194,8 +194,7 @@ class AttendanceOrgReportController extends Controller
                     ->orWhere('check_out_ip', 'like', "%{$search}%")
                     ->orWhereHas('employee', function ($employee) use ($search) {
                         $employee->where('employee_name', 'like', "%{$search}%")
-                            ->orWhere('employee_email', 'like', "%{$search}%")
-                            ->orWhere('employee_mobile', 'like', "%{$search}%");
+                            ->orWhereEmployeeContact($search);
                     });
             });
         }
@@ -235,8 +234,8 @@ class AttendanceOrgReportController extends Controller
                 'employee' => $empName,
                 'employee_id' => $attendance->employee_id,
                 'avatar_text' => $initials,
-                'email' => $attendance->employee?->employee_email ?? '-',
-                'mobile' => $attendance->employee?->employee_mobile ?? '',
+                'email' => \App\Models\Employee::maskEmail($attendance->employee?->employee_email) ?? '-',
+                'mobile' => \App\Models\Employee::maskMobile($attendance->employee?->employee_mobile) ?? '',
                 'designation' => $attendance->employee?->designation?->name ?? 'Staff',
                 'employee_active' => $isEmpActive,
                 'shift_name' => $shift->shift_name ?? 'General Shift',
@@ -516,8 +515,8 @@ class AttendanceOrgReportController extends Controller
             'employee' => [
                 'id' => $employee->employee_id,
                 'name' => $employee->employee_name,
-                'email' => $employee->employee_email,
-                'mobile' => $employee->employee_mobile,
+                'email' => \App\Models\Employee::maskEmail($employee->employee_email),
+                'mobile' => \App\Models\Employee::maskMobile($employee->employee_mobile),
                 'designation' => $employee->designation?->name ?? 'Staff',
                 'agency_id' => $employee->agency_id,
                 'agency_name' => $employee->agency?->agency_name ?? 'Direct / In-House',

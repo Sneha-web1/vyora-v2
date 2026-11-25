@@ -101,6 +101,27 @@ class AttendanceController extends Controller
         ]);
     }
 
+    public function holidayList()
+    {
+        $data['title'] = 'Holidays';
+
+        $holidays = Holiday::where(function ($q) {
+            $q->where('status', 'Active')
+                ->orWhere('status', 1)
+                ->orWhere('status', '1');
+        })->orderBy('holiday_date')->get();
+
+        $data['events'] = $holidays->map(function ($holiday) {
+            return [
+                'title'     => $holiday->holiday_name,
+                'start'     => \Carbon\Carbon::parse($holiday->holiday_date)->format('Y-m-d'),
+                'className' => 'holiday-event',
+            ];
+        })->values();
+
+        return view('employee.holiday.index', $data);
+    }
+
     public function updateStatus(Request $request)
     {
         $request->validate([

@@ -279,7 +279,7 @@ class JobsController extends Controller
             'branch_name' => $job->branch->branch_name ?? 'N/A',
             'state_name' => $job->state->name ?? 'N/A',
             'city_names' => $cityNames,
-            'company_logo' => optional($job->branch->company)->company_logo ?? null,
+            'company_logo' => optional(optional($job->branch)->company)->company_logo ?? null,
         ];
 
         return view('home.jobs.job-deatils', [
@@ -321,8 +321,7 @@ class JobsController extends Controller
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('employee_name', 'like', "%{$search}%")
-                        ->orWhere('employee_email', 'like', "%{$search}%")
-                        ->orWhere('employee_mobile', 'like', "%{$search}%");
+                        ->orWhereEmployeeContact($search);
                 });
             }
             $totalRecords = $query->count();
@@ -344,8 +343,8 @@ class JobsController extends Controller
                 $rows[] = [
                     'DT_RowIndex' => $start + $index + 1,
                     'name' => $candidate->employee_name . ' <button class="btn btn-sm btn-primary ms-2 view-details"        data-id="' . $candidate->employee_id . '"><i class="fa fa-eye"></i></button>',
-                    'email' => $candidate->employee_email,
-                    'phone' => $candidate->employee_mobile,
+                    'email' => \App\Models\Employee::maskEmail($candidate->employee_email),
+                    'phone' => \App\Models\Employee::maskMobile($candidate->employee_mobile),
                     'gender' => $gender,
                     'state' => $stateName,
                     'city' => $cityName,
@@ -558,20 +557,15 @@ class JobsController extends Controller
 
     public function destroy(string $id)
     {
-        $job = AcflJobs::withTrashed()->find($id);
+        $job = AcflJobs::find($id); // trashed jobs are excluded automatically
 
         if (!$job) {
             return response()->json(['success' => false, 'message' => 'Job not found.']);
         }
 
         try {
-            if ($job->trashed()) {
-                $job->forceDelete();
-                $message = 'Job permanently deleted!';
-            } else {
-                $job->delete();
-                $message = 'Job deleted successfully!';
-            }
+            $job->delete(); // soft delete only
+            $message = 'Job deleted successfully!';
 
             return response()->json(['success' => true, 'message' => $message]);
         } catch (\Exception $e) {

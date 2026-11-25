@@ -43,7 +43,7 @@ class AuthController extends Controller
         if ((int) $user->status !== 1) {
             Auth::logout();
 
-            return redirect('/')->with('error', 'Your account is inactive. Please contact the administrator.');
+            return redirect('/superadmin/login')->with('error', 'Your account is inactive. Please contact the administrator.');
         }
 
         // Only Super Admin may use this page - everyone else has a login panel of their own
@@ -55,7 +55,7 @@ class AuthController extends Controller
 
             $panel = $role instanceof Role ? $role->loginUrl() : url('/employee/login');
 
-            return redirect('/')->with('error', 'This login is for Super Admin only. Please sign in from your own panel: ' . $panel);
+            return redirect('/superadmin/login')->with('error', 'This login is for Super Admin only. Please sign in from your own panel: ' . $panel);
         }
 
         // Remember Me -> email & password cookie
@@ -83,7 +83,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        $to = $slug ? url('/' . $slug . '/login') : '/';
+        $to = $slug ? url('/' . $slug . '/login') : '/superadmin/login';
 
         return redirect($to)->with('success', 'Logged out successfully.');
     }

@@ -249,8 +249,8 @@
                         </div>
 
                         <div class="text-white-50 fs-13 d-flex align-items-center gap-3 flex-wrap mb-2">
-                            <span><i class="ti ti-mail me-1"></i>{{ $emp->employee_email ?: '-' }}</span>
-                            <span><i class="ti ti-phone me-1"></i>{{ $emp->employee_mobile ?: '-' }}</span>
+                            <span><i class="ti ti-mail me-1"></i>{{ $emp->masked_email ?: '-' }}</span>
+                            <span><i class="ti ti-phone me-1"></i>{{ $emp->masked_mobile ?: '-' }}</span>
                             @if(!empty($emp->full_location) && $emp->full_location !== '-')
                                 <span><i class="ti ti-map-pin me-1 text-warning"></i>{{ $emp->full_location }}</span>
                             @endif
@@ -292,11 +292,11 @@
 
         <!-- Quick Action Hub -->
         <div class="emp-action-bar">
-            <a href="tel:{{ $emp->employee_mobile }}" class="emp-action-btn" title="Call Mobile">
+            <a href="javascript:void(0);" class="emp-action-btn" title="Call Mobile">
                 <i class="ti ti-phone text-success"></i>
-                <span>Call ({{ $emp->employee_mobile ?: '-' }})</span>
+                <span>Call ({{ $emp->masked_mobile ?: '-' }})</span>
             </a>
-            <a href="mailto:{{ $emp->employee_email }}" class="emp-action-btn" title="Send Email">
+            <a href="javascript:void(0);" class="emp-action-btn" title="Send Email">
                 <i class="ti ti-mail text-primary"></i>
                 <span>Send Email</span>
             </a>
@@ -367,11 +367,11 @@
 
                     <div class="profile-data-row">
                         <span class="profile-data-label"><i class="ti ti-mail text-muted"></i>Official Email</span>
-                        <span class="profile-data-value"><a href="mailto:{{ $emp->employee_email }}">{{ $emp->employee_email ?: '-' }}</a></span>
+                        <span class="profile-data-value"><span>{{ $emp->masked_email ?: '-' }}</span></span>
                     </div>
                     <div class="profile-data-row">
                         <span class="profile-data-label"><i class="ti ti-phone text-muted"></i>Mobile Number</span>
-                        <span class="profile-data-value"><a href="tel:{{ $emp->employee_mobile }}">{{ $emp->employee_mobile ?: '-' }}</a></span>
+                        <span class="profile-data-value"><span>{{ $emp->masked_mobile ?: '-' }}</span></span>
                     </div>
                     <div class="profile-data-row">
                         <span class="profile-data-label"><i class="ti ti-gender-bigender text-muted"></i>Gender</span>

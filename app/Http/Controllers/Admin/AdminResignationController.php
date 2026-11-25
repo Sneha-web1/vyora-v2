@@ -75,8 +75,7 @@ class AdminResignationController extends Controller
                     ->orWhere('reason', 'like', "%{$s}%")
                     ->orWhereHas('employee', function ($eq) use ($s) {
                         $eq->where('employee_name', 'like', "%{$s}%")
-                            ->orWhere('employee_email', 'like', "%{$s}%")
-                            ->orWhere('employee_mobile', 'like', "%{$s}%");
+                            ->orWhereEmployeeContact($s);
                     });
             });
         }

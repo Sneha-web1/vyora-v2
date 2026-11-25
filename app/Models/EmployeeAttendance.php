@@ -15,6 +15,8 @@ class EmployeeAttendance extends Model
         'check_out_at',
         'check_in_ip',
         'check_out_ip',
+        'check_in_user_agent',
+        'check_out_user_agent',
         'check_in_latitude',
         'check_in_longitude',
         'check_out_latitude',

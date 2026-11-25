@@ -34,9 +34,9 @@
                                 <div class="row">
                                     <!-- Company -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_id">Company Name *</label>
+                                        <label class="form-label" for="company_id">Organization Name *</label>
                                         <select class="form-control select2" id="company_id" name="company_id" required>
-                                            <option value="">Select Company</option>
+                                            <option value="">Select Organization</option>
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}"
                                                     {{ old('company_id', $leaveType->company_id) == $company->id ? 'selected' : '' }}>

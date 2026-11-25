@@ -25,7 +25,7 @@ class BranchController extends Controller
     {
         $data['title'] = 'Masters/Organisation/Branch/Create';
         $data['imageUrl'] = "https://picsum.photos/200/200?random=" . rand(1, 1000);
-        $data['country'] = Country::where('id', 101)->get();
+        $data['country'] = Country::all();
         $data['companies'] = Company::all();
         return view('home.branch.create', $data);
     }
@@ -38,6 +38,8 @@ class BranchController extends Controller
             'branch_code' => 'required|string|max:255|unique:branches,branch_code',
             'branch_owner_name' => 'required|string|max:255',
             'contact_number' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255|unique:branches,email',
+            'pincode' => 'nullable|string|max:20|unique:branches,pincode',
             'address_1' => 'required|string',
             'country' => 'required|integer',
             'state' => 'required|integer',
@@ -54,6 +56,8 @@ class BranchController extends Controller
                 'branch_code' => $request->branch_code,
                 'branch_owner_name' => $request->branch_owner_name,
                 'contact_number' => $request->contact_number,
+                'email' => $request->filled('email') ? $request->email : null,
+                'pincode' => $request->filled('pincode') ? $request->pincode : null,
                 'address_1' => $request->address_1,
                 'gst_number' => 'NA',
                 'address_2' => 'NA',
@@ -93,7 +97,8 @@ class BranchController extends Controller
                     $q->where('branch_name', 'like', "%{$search}%")
                         ->orWhere('branch_code', 'like', "%{$search}%")
                         ->orWhere('branch_owner_name', 'like', "%{$search}%")
-                        ->orWhere('contact_number', 'like', "%{$search}%");
+                        ->orWhere('contact_number', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
                 });
             }
             $totalRecord = $query->count();
@@ -108,6 +113,8 @@ class BranchController extends Controller
                     'branch_code' => $branch->branch_code ?? '--',
                     'branch_owner_name' => $branch->branch_owner_name ?? '--',
                     'contact_number' => $branch->contact_number ?? '--',
+                    'email' => $branch->email ?? '--',
+                    'pincode' => $branch->pincode ?? '--',
                     'country_name' => $branch->countryData->name ?? '--',
                     'state_name' => $branch->stateData->name ?? '--',
                     'city_name' => $branch->cityData->name ?? '--',
@@ -166,6 +173,8 @@ class BranchController extends Controller
             'branch_code' => 'required|unique:branches,branch_code,' . $id,
             'branch_owner_name' => 'required',
             'contact_number' => 'required',
+            'email' => 'nullable|email|max:255|unique:branches,email,' . $id,
+            'pincode' => 'nullable|string|max:20|unique:branches,pincode,' . $id,
             'address_1' => 'required',
             'country' => 'required',
             'state' => 'required',
@@ -173,10 +182,16 @@ class BranchController extends Controller
             'status' => 'required|in:Active,Inactive'
         ]);
 
-        $branch->update($request->only([
-            'company_id','branch_name','branch_code','branch_owner_name','contact_number',
-            'address_1','address_2','country','state','city','status',
-        ]));
+        $branch->update(array_merge(
+            $request->only([
+                'company_id','branch_name','branch_code','branch_owner_name','contact_number',
+                'address_1','address_2','country','state','city','status',
+            ]),
+            [
+                'email' => $request->filled('email') ? $request->email : null,
+                'pincode' => $request->filled('pincode') ? $request->pincode : null,
+            ]
+        ));
 
         return redirect()
             ->route('masters.organisation.branch')
@@ -187,7 +202,7 @@ class BranchController extends Controller
     public function destroy($id)
     {
         $branch = Branch::findOrFail($id);
-        $branch->delete(); // hard delete (branches table has no deleted_at)
+        $branch->delete(); // soft delete (branches table has deleted_at)
 
         return response()->json([
             'status' => true,

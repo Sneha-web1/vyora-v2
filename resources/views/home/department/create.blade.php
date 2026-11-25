@@ -43,11 +43,11 @@
                                 <div class="row">
                                     <!-- Select Company -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_id">Select Company *</label>
+                                        <label class="form-label" for="company_id">Select Organization *</label>
                                         <select class="form-control select2" id="company_id" name="company_id" required>
-                                            <option value="">Select Company</option>
+                                            <option value="">Select Organization</option>
                                             @foreach ($companies as $company)
-                                                <option value="{{ $company->id }}" {{ old('company_id') == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
+                                                <option value="{{ $company->id }}" {{ old('company_id', $loop->count === 1 ? $company->id : null) == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
                                             @endforeach
                                         </select>
                                         @error('company_id')
@@ -175,8 +175,8 @@
             });
 
             // Validation fail ke baad old company ke branches wapas load karo
-            @if (old('company_id'))
-                loadBranches("{{ old('company_id') }}", "{{ old('branch_id') }}");
+            @if ($preCompanyId = old('company_id', $companies->count() === 1 ? $companies->first()->id : null))
+                loadBranches("{{ $preCompanyId }}", "{{ old('branch_id') }}");
             @endif
         });
     </script>

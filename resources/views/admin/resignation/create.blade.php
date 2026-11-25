@@ -61,10 +61,10 @@
                                 @foreach ($employees as $emp)
                                     <option value="{{ $emp->employee_id }}"
                                         data-supervisor="{{ $emp->supervisorEmployee?->employee_name ?? 'None' }}"
-                                        data-supervisor-email="{{ $emp->supervisorEmployee?->employee_email ?? '' }}"
+                                        data-supervisor-email="{{ \App\Models\Employee::maskEmail($emp->supervisorEmployee?->employee_email) ?? '' }}"
                                         data-agency="{{ $emp->agency?->agency_name ?? 'Direct' }}"
                                         data-designation="{{ $emp->designation?->name ?? 'Staff' }}"
-                                        data-email="{{ $emp->employee_email }}"
+                                        data-email="{{ $emp->masked_email }}"
                                         {{ old('employee_id') == $emp->employee_id ? 'selected' : '' }}>
                                         {{ $emp->employee_name }} ({{ $emp->employee_id }}) - {{ $emp->designation?->name ?? 'Staff' }}
                                     </option>

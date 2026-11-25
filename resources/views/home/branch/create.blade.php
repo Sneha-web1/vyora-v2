@@ -37,11 +37,11 @@
                                 <div class="form-row row">
                                     <!-- Company -->
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="company_id">Company Name *</label>
+                                        <label class="form-label" for="company_id">Organization Name *</label>
                                         <select class="form-control select2" id="company_id" name="company_id" required>
-                                            <option value="">Select Company</option>
+                                            <option value="">Select Organization</option>
                                             @foreach ($companies as $company)
-                                                <option value="{{ $company->id }}">{{ $company->company_name }}</option>
+                                                <option value="{{ $company->id }}" {{ old('company_id', $loop->count === 1 ? $company->id : null) == $company->id ? 'selected' : '' }}>{{ $company->company_name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="invalid-feedback">Please select company name.</div>
@@ -76,13 +76,15 @@
                                         <div class="invalid-feedback">Please enter contact number.</div>
                                     </div>
 
-                                    
-
-                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label" for="address_1">Address 1 *</label>
-                                        <textarea class="form-control" id="address_1" name="address_1" rows="2" placeholder="Enter Address" required></textarea>
-                                        <div class="invalid-feedback">Please enter address_1.</div>
+                                    <!-- Email (Optional) -->
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            value="{{ old('email') }}" placeholder="Enter Email (Optional)">
+                                        <div class="invalid-feedback">Please enter a valid email.</div>
                                     </div>
+
+                                    <!-- Country / State / City / Address / Pincode -->
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="country">Country *</label>
                                         <select class="form-control select2" id="country" name="country" required>
@@ -97,8 +99,7 @@
                                         <div class="invalid-feedback">Please enter country.</div>
                                     </div>
 
-                                    <!-- State -->
-                                     <div class="col-md-4 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <label class="form-label" for="state">State *</label>
                                         <select class="form-control select2" id="state" name="state" required>
                                             <option value="">Select State</option>
@@ -113,6 +114,7 @@
                                         </select>
                                         <div class="invalid-feedback">Please enter state.</div>
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label" for="city">City *</label>
                                         <select class="form-control select2" id="city" name="city" required>
@@ -128,7 +130,20 @@
                                         </select>
                                         <div class="invalid-feedback">Please enter city.</div>
                                     </div>
-                                    
+
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label" for="address_1">Address 1 *</label>
+                                        <textarea class="form-control" id="address_1" name="address_1" rows="2" placeholder="Enter Address" required></textarea>
+                                        <div class="invalid-feedback">Please enter address_1.</div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label" for="pincode">Pincode</label>
+                                        <input type="text" class="form-control" id="pincode" name="pincode"
+                                            value="{{ old('pincode') }}" placeholder="Enter Pincode (Optional)">
+                                        <div class="invalid-feedback">Please enter a valid pincode.</div>
+                                    </div>
+
                                      <div class="col-md-4 mb-3">
                                         <label class="form-label" for="status">Status *</label>
                                         <select class="form-control select2" id="status" name="status" required>

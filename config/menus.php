@@ -32,7 +32,7 @@ return [
     [
         'key' => 'masters', 'title' => 'Masters', 'icon' => 'ti ti-building', 'route' => '#',
         'children' => [
-            ['key' => 'masters.company',      'title' => 'Company',        'route' => 'masters.organisation.company'],
+            ['key' => 'masters.company',      'title' => 'Organization',   'route' => 'masters.organisation.company'],
             ['key' => 'masters.branch',       'title' => 'Branch',         'route' => 'masters.organisation.branch'],
             ['key' => 'masters.category',     'title' => 'Category',       'route' => 'settings.category'],
             ['key' => 'masters.department',   'title' => 'Department',     'route' => 'settings.department'],
@@ -42,6 +42,8 @@ return [
             ['key' => 'masters.agency',       'title' => 'Agency',         'route' => 'masters.organisation.agency'],
             ['key' => 'masters.agency-map',   'title' => 'Agency Mapping', 'route' => 'masters.organisation.agency.mapping'],
             ['key' => 'masters.skill',        'title' => 'Job Skill',      'route' => 'settings.skills'],
+            ['key' => 'settings.leave-types',     'title' => 'Leave Types',      'route' => 'settings.leave-type'],
+            ['key' => 'settings.leave-allowance', 'title' => 'Leave Allowance',  'route' => 'settings.leave-allow'],
             // key stays 'settings.email-templates' on purpose (keeps existing role access); only the parent changed
             ['key' => 'settings.email-templates', 'title' => 'Email Templates', 'route' => 'settings.email-templates'],
         ],
@@ -76,16 +78,6 @@ return [
         ],
     ],
 
-    // ───────────────────────── SETTINGS ─────────────────────────
-    [
-        'key' => 'settings', 'title' => 'Settings', 'icon' => 'ti ti-settings', 'route' => '#', 'section' => 'SETTINGS',
-        'children' => [
-            ['key' => 'settings.holidays',        'title' => 'Holidays',         'route' => 'settings.holiday'],
-            ['key' => 'settings.leave-types',     'title' => 'Leave Types',      'route' => 'settings.leave-type'],
-            ['key' => 'settings.leave-allowance', 'title' => 'Leave Allowance',  'route' => 'settings.leave-allow'],
-        ],
-    ],
-
     // ───────────────────────── HRM ─────────────────────────
     [
         'key' => 'recruitment', 'title' => 'Recruitment', 'icon' => 'ti ti-user-search', 'route' => '#', 'section' => 'HRM',
@@ -100,6 +92,7 @@ return [
         'key' => 'leave', 'title' => 'Leave Management', 'icon' => 'ti ti-calendar-event', 'route' => '#', 'section' => 'HRM',
         'children' => [
             ['key' => 'leave.requests',   'title' => 'Leave Requests',   'route' => 'attendance.leave.request'],
+            ['key' => 'leave.holidays',   'title' => 'Holidays',         'route' => 'settings.holiday'],
             ['key' => 'leave.missed',     'title' => 'Missed Punch',     'route' => '#'],
             ['key' => 'leave.compoff',    'title' => 'Comp-Off',         'route' => '#'],
             ['key' => 'leave.overtime',   'title' => 'Overtime',         'route' => '#'],

@@ -78,9 +78,19 @@
                                     placeholder="e.g. +91 9876543210">
                             </div>
                             <div class="col-md-4">
+                                <label class="form-label">Landline Number</label>
+                                <input type="text" name="landline_no" class="form-control" value="{{ $val('landline_no') }}"
+                                    maxlength="20" placeholder="e.g. 0512-2345678">
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label">Email Address</label>
                                 <input type="email" name="email" class="form-control" value="{{ $val('email') }}"
                                     placeholder="agency@example.com">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">GST Number</label>
+                                <input type="text" name="gst_no" class="form-control" value="{{ $val('gst_no') }}"
+                                    maxlength="20" placeholder="e.g. 09ABCDE1234F1Z5">
                             </div>
 
                             <div class="col-md-4">
@@ -111,9 +121,14 @@
                                 </select>
                             </div>
 
-                            <div class="col-12">
+                            <div class="col-md-8">
                                 <label class="form-label">Office Address</label>
                                 <textarea name="address" rows="2" class="form-control" placeholder="Street address, building, suite...">{{ $val('address') }}</textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Office Pincode</label>
+                                <input type="text" name="office_pincode" class="form-control" value="{{ $val('office_pincode') }}"
+                                    maxlength="10" placeholder="e.g. 208001">
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Notes / Terms</label>

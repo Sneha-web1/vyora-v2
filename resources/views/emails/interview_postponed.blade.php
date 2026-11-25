@@ -24,7 +24,7 @@
                                     </td>
                                     <td align="right">
                                         @if (!empty($companyDetails[0]->company_logo))
-                                            <img src="cid:{{ $companyDetails[0]->company_logo }}" alt="Company Logo"
+                                            <img src="cid:{{ $companyDetails[0]->company_logo }}" alt="Organization Logo"
                                                 style="max-height:50px; max-width:120px; display:block;">
                                         @endif
                                     </td>
@@ -43,7 +43,7 @@
                     <!-- Footer -->
                     <tr>
                         <td style="background:#f1f1f1; text-align:center; padding:15px; font-size:12px; color:#555;">
-                            © {{ date('Y') }} {{ $companyDetails[0]->company_name ?? 'Our Company' }}
+                            © {{ date('Y') }} {{ $companyDetails[0]->company_name ?? 'Our Organization' }}
                             | Powered by Neural Info Solutions Private Limited
                         </td>
                     </tr>

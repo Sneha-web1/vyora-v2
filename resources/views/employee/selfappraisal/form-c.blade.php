@@ -98,7 +98,7 @@
                     <!-- Achievement 2 -->
                     <div class="achievement-group mt-3">
                         <p>Achievement 2 / उपलब्धि 2</p>
-                        <textarea class="form-control achievement" rows="2" maxlength="500">we have complete control over the BM and Staff in our area to ensure that no one breaks the Company rule & that no theft occurs. this has maintained trust and transparency within the organization.</textarea>
+                        <textarea class="form-control achievement" rows="2" maxlength="500">we have complete control over the BM and Staff in our area to ensure that no one breaks the Organization rule & that no theft occurs. this has maintained trust and transparency within the organization.</textarea>
                         <small class="text-muted charCount">500 characters left</small>
                     </div>
 
@@ -156,7 +156,7 @@
                     <!-- Goal 2 -->
                     <div class="achievement-group mt-3">
                         <p>Goal 2 / लक्ष्य 2</p>
-                        <textarea class="form-control achievement" rows="2" maxlength="500">I will work with my team in my area to meet the loan Dis. target by the Company .</textarea>
+                        <textarea class="form-control achievement" rows="2" maxlength="500">I will work with my team in my area to meet the loan Dis. target by the Organization .</textarea>
                         <small class="text-muted charCount">500 characters left</small>
                     </div>
 

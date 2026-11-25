@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/plugins/%40simonwep/pickr/themes/nano.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
-
+    @include('layout.focus-style')
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
@@ -174,7 +174,7 @@
                                                     <a href="#"
                                                         class="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
                                                         <span class="d-flex align-items-center me-3">
-                                                            <i class="ti ti-building text-default me-2"></i>Companies
+                                                            <i class="ti ti-building text-default me-2"></i>Organizations
                                                         </span>
                                                         <i class="ti ti-arrow-right"></i>
                                                     </a>
@@ -534,69 +534,81 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
 
-                        <!-- Dashboard -->
-                        <li class="menu-title"><span>Dashboard</span></li>
+                        {{-- MAIN MENU --}}
+                        <li class="menu-title"><span>MAIN MENU</span></li>
                         <li>
-                            <a href="{{ route('employee.dashboard') }}">
-                                <i class="ti ti-layout-navbar"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-
-                        <!-- Attendance -->
-                        <li class="menu-title"><span>Attendance</span></li>
-
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i class="ti ti-calendar-stats"></i>
-                                <span>Attendance</span>
-                                <span class="menu-arrow"></span>
-                            </a>
                             <ul>
-                                <li><a href="{{ route('employee.attendance') }}">Attendance Register</a></li>
+                                <li>
+                                    <a href="{{ route('employee.dashboard') }}">
+                                        <i class="ti ti-layout-navbar"></i><span>Dashboard</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
-                        <!-- Leave Management -->
-                        <li class="menu-title"><span>Leave Management</span></li>
-
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i class="ti ti-smart-home"></i>
-                                <span>Leave Management</span>
-                                <span class="menu-arrow"></span>
-                            </a>
+                        {{-- ATTENDANCE & LEAVES --}}
+                        <li class="menu-title"><span>ATTENDANCE & LEAVES</span></li>
+                        <li>
                             <ul>
-                                <li><a href="{{ route('employee.leaves.apply') }}">Apply Leaves</a></li>
-                                <li><a href="{{ route('employee.leaves') }}">Leaves List</a></li>
-                                <li><a href="{{ route('employee.holidays') }}">Holiday List</a></li>
+                                <li class="submenu">
+                                    <a href="javascript:void(0);">
+                                        <i class="ti ti-calendar-stats"></i><span>Attendance</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="{{ route('employee.attendance') }}">My Attendance</a></li>
+                                        <li><a href="{{ route('employee.attendance.register') }}">Attendance Register</a></li>
+                                    </ul>
+                                </li>
+                                <li class="submenu">
+                                    <a href="javascript:void(0);">
+                                        <i class="ti ti-calendar-event"></i><span>Leave Management</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="{{ route('employee.leaves.apply') }}">Apply Leaves</a></li>
+                                        <li><a href="{{ route('employee.leaves') }}">Leaves List</a></li>
+                                        <li><a href="{{ route('employee.holidays') }}">Holiday List</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
 
-                        <!-- Self Appraisal -->
-
-
-                        <li class="menu-title"><span>Self Appraisal</span></li>
-
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i class="ti ti-smart-home"></i>
-                                <span>Appraisal</span>
-                                <span class="menu-arrow"></span>
-                            </a>
+                        {{-- PERFORMANCE --}}
+                        <li class="menu-title"><span>PERFORMANCE</span></li>
+                        <li>
                             <ul>
-                                <li><a href="{{ route('employee.self.appraisal') }}">Self Appraisal</a></li>
-                                <li><a href="{{ route('employee.competencies') }}">Competencies</a></li>
-                                <li><a href="{{ route('employee.kpi.assessment') }}">KPI</a></li>
-                                <li><a href="{{ route('employee.form-c') }}">Form C</a></li>
+                                <li class="submenu">
+                                    <a href="javascript:void(0);">
+                                        <i class="ti ti-chart-arrows"></i><span>Appraisal</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="{{ route('employee.self.appraisal') }}">Self Appraisal</a></li>
+                                        <li><a href="{{ route('employee.competencies') }}">Competencies</a></li>
+                                        <li><a href="{{ route('employee.kpi.assessment') }}">KPI</a></li>
+                                        <li><a href="{{ route('employee.form-c') }}">Form C</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
-                        {{-- <li>
-                            <a href="{{ route('employee.self.appraisal') }}">
-                                <i class="fas fa-file-signature"></i>
-                                <span>Self Appraisal</span>
-                            </a>
-                        </li> --}}
+
+                        {{-- EXIT MANAGEMENT --}}
+                        <li class="menu-title"><span>EXIT MANAGEMENT</span></li>
+                        <li>
+                            <ul>
+                                <li class="submenu">
+                                    <a href="javascript:void(0);">
+                                        <i class="ti ti-door-exit"></i><span>Resignation & Exit</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="{{ route('employee.resignation.index') }}">Resignation Overview</a></li>
+                                        <li><a href="{{ route('employee.resignation.create') }}">Apply for Resignation</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
 
                     </ul>
                 </div>

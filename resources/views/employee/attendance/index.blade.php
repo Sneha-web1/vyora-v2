@@ -1,438 +1,821 @@
 @extends('employee.layout.layout')
-@section('title', $title ?? 'My Attendance Register')
-
+@section('title', $title)
 @section('main-section')
-    <x-alert-modal :type="session('success') ? 'success' : (session('error') ? 'error' : '')" :message="session('success') ?? session('error')" />
 
-    <style>
-        .register-page .stat-card {
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 14px;
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-            transition: all 0.2s ease;
-        }
+    <div class="page-wrapper" style="min-height: 388px;">
+        <div class="content">
 
-        .register-page .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-        }
-
-        .register-page .filter-card {
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
-        }
-
-        .register-page .matrix-card {
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-
-        /* Register Matrix Table */
-        .register-table-wrapper {
-            position: relative;
-            overflow-x: auto;
-            max-height: 720px;
-        }
-
-        .register-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-            font-size: 12px;
-        }
-
-        .register-table th,
-        .register-table td {
-            border-bottom: 1px solid #e2e8f0;
-            border-right: 1px solid #e2e8f0;
-            padding: 7px 5px;
-            text-align: center;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        .register-table thead th {
-            position: sticky;
-            top: 0;
-            background: #f8fafc;
-            color: #475569;
-            font-weight: 700;
-            font-size: 11px;
-            z-index: 10;
-        }
-
-        .register-table thead th.weekend-col {
-            background-color: #fef3c7 !important;
-            color: #92400e;
-        }
-
-        .register-table tbody tr:hover td {
-            background-color: #f8fafc;
-        }
-
-        /* Sticky Left Columns */
-        .sticky-col-1 {
-            position: sticky;
-            left: 0;
-            background: #ffffff;
-            z-index: 5;
-            min-width: 50px;
-            text-align: center;
-        }
-
-        .sticky-col-2 {
-            position: sticky;
-            left: 50px;
-            background: #ffffff;
-            z-index: 5;
-            min-width: 200px;
-            text-align: left !important;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.04);
-        }
-
-        .register-table thead th.sticky-col-1,
-        .register-table thead th.sticky-col-2 {
-            z-index: 15 !important;
-            background: #f1f5f9 !important;
-        }
-
-        .register-table tfoot th.sticky-col-1,
-        .register-table tfoot th.sticky-col-2 {
-            z-index: 15 !important;
-            background: #f8fafc !important;
-        }
-
-        /* Attendance Status Indicators */
-        .cell-p {
-            background-color: #dcfce7 !important;
-            color: #15803d !important;
-            font-weight: 800;
-            border-radius: 4px;
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            text-align: center;
-            font-size: 11px;
-        }
-
-        .cell-a {
-            background-color: #fee2e2 !important;
-            color: #b91c1c !important;
-            font-weight: 800;
-            border-radius: 4px;
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            text-align: center;
-            font-size: 11px;
-        }
-
-        .col-summary-p {
-            background-color: #f0fdf4 !important;
-            color: #166534 !important;
-            font-weight: 700;
-        }
-
-        .col-summary-a {
-            background-color: #fef2f2 !important;
-            color: #991b1b !important;
-            font-weight: 700;
-        }
-
-        .badge-legend {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 11px;
-            margin-right: 4px;
-        }
-    </style>
-
-    <div class="page-wrapper register-page">
-        <div class="content container-fluid">
-
-            <!-- Page Header -->
-            <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-4">
-                <div class="my-auto mb-2 mb-md-0">
-                    <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
-                        <i class="ti ti-calendar-stats text-primary"></i> My Attendance Register
-                    </h3>
+            <!-- Breadcrumb -->
+            <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+                <div class="my-auto mb-2">
+                    <h2 class="mb-1">Employee Attendance</h2>
                     <nav>
-                        <ol class="breadcrumb mb-0 fs-12">
-                            <li class="breadcrumb-item"><a href="{{ route('employee.dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item">Attendance</li>
-                            <li class="breadcrumb-item active">Attendance Register</li>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="#"><i class="ti ti-smart-home"></i></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                Employee
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Employee Attendance</li>
                         </ol>
                     </nav>
                 </div>
+                <div class="d-flex my-xl-auto right-content align-items-center flex-wrap ">
+                    <div class="me-2 mb-2">
+                        <div class="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
+                            <a href="#" class="btn btn-icon btn-sm active bg-primary text-white me-1"><i
+                                    class="ti ti-brand-days-counter"></i></a>
+                            <a href="#" class="btn btn-icon btn-sm"><i
+                                    class="ti ti-calendar-event"></i></a>
+                        </div>
+                    </div>
+                    <div class="me-2 mb-2">
+                        <div class="dropdown">
+                            <a href="javascript:void(0);"
+                                class="dropdown-toggle btn btn-white d-inline-flex align-items-center"
+                                data-bs-toggle="dropdown">
+                                <i class="ti ti-file-export me-1"></i>Export
+                            </a>
+                            <ul class="dropdown-menu  dropdown-menu-end p-3">
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1"><i
+                                            class="ti ti-file-type-pdf me-1"></i>Export as PDF</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1"><i
+                                            class="ti ti-file-type-xls me-1"></i>Export as Excel </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                            data-bs-target="#attendance_report"><i class="ti ti-file-analytics me-2"></i>Report</a>
+                    </div>
+                    <div class="ms-2 head-icons">
+                        <a href="javascript:void(0);" class="" data-bs-toggle="tooltip" data-bs-placement="top"
+                            data-bs-original-title="Collapse" id="collapse-header">
+                            <i class="ti ti-chevrons-up"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
+            <!-- /Breadcrumb -->
 
-            <!-- Filter Card -->
-            <div class="filter-card p-4 mb-4">
-                <form action="{{ route('employee.attendance') }}" method="GET" id="filterForm">
-                    <div class="row g-3 align-items-end">
-
-                        <!-- Month Filter -->
-                        <div class="col-md-2">
-                            <label class="form-label fs-13 fw-semibold text-dark mb-1 d-flex align-items-center gap-1">
-                                <i class="ti ti-calendar text-primary"></i> Month
-                            </label>
-                            <input type="month" name="month" class="form-control" value="{{ $selectedMonth }}" id="filterMonth">
-                        </div>
-
-                        <!-- Date Range Filters -->
-                        <div class="col-md-2">
-                            <label class="form-label fs-13 fw-semibold text-dark mb-1">From Date (Optional)</label>
-                            <input type="date" name="from_date" class="form-control" value="{{ $fromDate }}" id="fromDateInput">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label fs-13 fw-semibold text-dark mb-1">To Date (Optional)</label>
-                            <input type="date" name="to_date" class="form-control" value="{{ $toDate }}" id="toDateInput">
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="col-12 d-flex align-items-center justify-content-between pt-2 border-top">
-                            <div class="fs-12 text-muted">
-                                <strong>Active Filters:</strong> {{ $filterAgencyName }} &bull; {{ $filterEmployeeName }} &bull; {{ $dateRangeText }}
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 d-flex">
+                    <div class="card flex-fill">
+                        <div class="card-body">
+                            <div class="mb-3 text-center">
+                                <h6 class="fw-medium text-gray-5 mb-1">
+                                    Good {{ now()->hour < 12 ? 'Morning' : (now()->hour < 17 ? 'Afternoon' : 'Evening') }}, {{ $employee->employee_name ?? 'Employee' }}
+                                </h6>
+                                <h5 class="text-dark fw-bold mb-0">{{ now()->format('h:i A, d M Y') }}</h5>
+                                <div class="text-muted fs-11 mt-1">Shift: {{ $shift->shift_name ?? 'General Shift' }} ({{ date('h:i A', strtotime($shift->start_time ?? '09:30')) }} - {{ date('h:i A', strtotime($shift->end_time ?? '18:30')) }})</div>
                             </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <a href="{{ route('employee.attendance') }}" class="btn btn-light btn-sm px-3 fw-medium">
-                                    <i class="ti ti-rotate-clockwise me-1"></i> Reset
-                                </a>
-                                <button type="submit" class="btn btn-primary btn-sm px-4 fw-semibold d-inline-flex align-items-center gap-1">
-                                    <i class="ti ti-filter fs-14"></i> Filter Register
-                                </button>
+                            <div class="attendance-circle-progress mx-auto mb-3" data-value="100">
+                                <div class="avatar avatar-xxl avatar-rounded bg-primary-subtle text-primary d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px; font-size: 28px; font-weight: 700;">
+                                    {{ strtoupper(substr($employee->employee_name ?? 'E', 0, 2)) }}
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                @if ($todayAttendance && $todayAttendance->check_in_at)
+                                    <div class="badge badge-md bg-success-subtle text-success border border-success-subtle mb-3">
+                                        Today: {{ $todayHours ?? 0 }} hrs
+                                    </div>
+                                    <h6 class="fw-medium d-flex align-items-center justify-content-center mb-3 text-dark fs-13">
+                                        <i class="ti ti-clock-check text-success me-1"></i>
+                                        Punched In at {{ \Carbon\Carbon::parse($todayAttendance->check_in_at)->format('h:i A') }}
+                                    </h6>
+                                    @if ($todayAttendance->check_out_at)
+                                        <div class="alert alert-light border text-muted fs-12 py-2 mb-0">
+                                            <i class="ti ti-circle-check text-success me-1"></i> Checked Out at {{ \Carbon\Carbon::parse($todayAttendance->check_out_at)->format('h:i A') }}
+                                        </div>
+                                    @else
+                                        <form method="POST" action="{{ route('employee.attendance.punch') }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-dark w-100 d-flex align-items-center justify-content-center gap-1 shadow-sm">
+                                                <i class="ti ti-logout fs-16"></i> Punch Out
+                                            </button>
+                                        </form>
+                                    @endif
+                                @else
+                                    <div class="badge badge-md bg-warning-subtle text-warning border border-warning-subtle mb-3">
+                                        Not Marked Today
+                                    </div>
+                                    <form method="POST" action="{{ route('employee.attendance.punch') }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-1 shadow-sm">
+                                            <i class="ti ti-fingerprint fs-18"></i> Punch In
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
-
                     </div>
-                </form>
+                </div>
+                <div class="col-xl-9 col-lg-8 d-flex">
+                    <div class="row flex-fill">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="border-bottom mb-2 pb-2">
+                                        <span class="avatar avatar-sm bg-primary mb-2"><i
+                                                class="ti ti-clock-stop"></i></span>
+                                        <h2 class="mb-2">8.36 / <span class="fs-20 text-gray-5"> 9</span></h2>
+                                        <p class="fw-medium text-truncate">Total Hours Today</p>
+                                    </div>
+                                    <div>
+                                        <p class="d-flex align-items-center fs-13">
+                                            <span class="avatar avatar-xs rounded-circle bg-success flex-shrink-0 me-2">
+                                                <i class="ti ti-arrow-up fs-12"></i>
+                                            </span>
+                                            <span>5% This Week</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="border-bottom mb-2 pb-2">
+                                        <span class="avatar avatar-sm bg-dark mb-2"><i class="ti ti-clock-up"></i></span>
+                                        <h2 class="mb-2">10 / <span class="fs-20 text-gray-5"> 40</span></h2>
+                                        <p class="fw-medium text-truncate">Total Hours Week</p>
+                                    </div>
+                                    <div>
+                                        <p class="d-flex align-items-center fs-13">
+                                            <span class="avatar avatar-xs rounded-circle bg-success flex-shrink-0 me-2">
+                                                <i class="ti ti-arrow-up fs-12"></i>
+                                            </span>
+                                            <span>7% Last Week</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="border-bottom mb-2 pb-2">
+                                        <span class="avatar avatar-sm bg-info mb-2"><i
+                                                class="ti ti-calendar-up"></i></span>
+                                        <h2 class="mb-2">75 / <span class="fs-20 text-gray-5"> 98</span></h2>
+                                        <p class="fw-medium text-truncate">Total Hours Month</p>
+                                    </div>
+                                    <div>
+                                        <p class="d-flex align-items-center fs-13 text-truncate">
+                                            <span class="avatar avatar-xs rounded-circle bg-danger flex-shrink-0 me-2">
+                                                <i class="ti ti-arrow-down fs-12"></i>
+                                            </span>
+                                            <span>8% Last Month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="border-bottom mb-2 pb-2">
+                                        <span class="avatar avatar-sm bg-pink mb-2"><i
+                                                class="ti ti-calendar-star"></i></span>
+                                        <h2 class="mb-2">16 / <span class="fs-20 text-gray-5"> 28</span></h2>
+                                        <p class="fw-medium text-truncate">Overtime this Month</p>
+                                    </div>
+                                    <div>
+                                        <p class="d-flex align-items-center fs-13 text-truncate">
+                                            <span class="avatar avatar-xs rounded-circle bg-danger flex-shrink-0 me-2">
+                                                <i class="ti ti-arrow-down fs-12"></i>
+                                            </span>
+                                            <span>6% Last Month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-3">
+                                            <div class="mb-3">
+                                                <p class="d-flex align-items-center mb-1"><i
+                                                        class="ti ti-point-filled text-dark-transparent me-1"></i>Total
+                                                    Working hours</p>
+                                                <h3>12h 36m</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3">
+                                            <div class="mb-3">
+                                                <p class="d-flex align-items-center mb-1"><i
+                                                        class="ti ti-point-filled text-success me-1"></i>Productive Hours
+                                                </p>
+                                                <h3>08h 36m</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3">
+                                            <div class="mb-3">
+                                                <p class="d-flex align-items-center mb-1"><i
+                                                        class="ti ti-point-filled text-warning me-1"></i>Break hours</p>
+                                                <h3>22m 15s</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3">
+                                            <div class="mb-3">
+                                                <p class="d-flex align-items-center mb-1"><i
+                                                        class="ti ti-point-filled text-info me-1"></i>Overtime</p>
+                                                <h3>02h 15m</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="progress bg-transparent-dark mb-3" style="height: 24px;">
+                                                <div class="progress-bar bg-white rounded" role="progressbar"
+                                                    style="width: 18%;"></div>
+                                                <div class="progress-bar bg-success rounded me-2" role="progressbar"
+                                                    style="width: 18%;"></div>
+                                                <div class="progress-bar bg-warning rounded me-2" role="progressbar"
+                                                    style="width: 5%;"></div>
+                                                <div class="progress-bar bg-success rounded me-2" role="progressbar"
+                                                    style="width: 28%;"></div>
+                                                <div class="progress-bar bg-warning rounded me-2" role="progressbar"
+                                                    style="width: 17%;"></div>
+                                                <div class="progress-bar bg-success rounded me-2" role="progressbar"
+                                                    style="width: 22%;"></div>
+                                                <div class="progress-bar bg-warning rounded me-2" role="progressbar"
+                                                    style="width: 5%;"></div>
+                                                <div class="progress-bar bg-info rounded me-2" role="progressbar"
+                                                    style="width: 3%;"></div>
+                                                <div class="progress-bar bg-info rounded" role="progressbar"
+                                                    style="width: 2%;"></div>
+                                                <div class="progress-bar bg-white rounded" role="progressbar"
+                                                    style="width: 18%;"></div>
+                                            </div>
+
+                                        </div>
+                                        <div class="co-md-12">
+                                            <div
+                                                class="d-flex align-items-center justify-content-between flex-wrap row-gap-2">
+                                                <span class="fs-10">06:00</span>
+                                                <span class="fs-10">07:00</span>
+                                                <span class="fs-10">08:00</span>
+                                                <span class="fs-10">09:00</span>
+                                                <span class="fs-10">10:00</span>
+                                                <span class="fs-10">11:00</span>
+                                                <span class="fs-10">12:00</span>
+                                                <span class="fs-10">01:00</span>
+                                                <span class="fs-10">02:00</span>
+                                                <span class="fs-10">03:00</span>
+                                                <span class="fs-10">04:00</span>
+                                                <span class="fs-10">05:00</span>
+                                                <span class="fs-10">06:00</span>
+                                                <span class="fs-10">07:00</span>
+                                                <span class="fs-10">08:00</span>
+                                                <span class="fs-10">09:00</span>
+                                                <span class="fs-10">10:00</span>
+                                                <span class="fs-10">11:00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- KPI Summary Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-sm-6 col-xl-3">
-                    <div class="stat-card p-3 d-flex align-items-center gap-3">
-                        <div class="avatar avatar-md rounded-3 bg-primary-subtle text-primary d-flex align-items-center justify-content-center fs-20">
-                            <i class="ti ti-users"></i>
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                    <h5>Employee Attendance</h5>
+                    <div class="d-flex my-xl-auto right-content align-items-center flex-wrap row-gap-3">
+                        <div class="me-3">
+                            <div class="input-icon-end position-relative">
+                                <input type="text" class="form-control date-range bookingrange"
+                                    placeholder="dd/mm/yyyy - dd/mm/yyyy">
+                                <span class="input-icon-addon">
+                                    <i class="ti ti-chevron-down"></i>
+                                </span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-muted fs-12 fw-medium text-uppercase">Total Employees</span>
-                            <h4 class="fw-bold text-dark mb-0 fs-20">{{ count($rows) }}</h4>
+                        <div class="dropdown me-3">
+                            <a href="javascript:void(0);"
+                                class="dropdown-toggle btn btn-white d-inline-flex align-items-center"
+                                data-bs-toggle="dropdown">
+                                Select Status
+                            </a>
+                            <ul class="dropdown-menu  dropdown-menu-end p-3">
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Present</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Absent</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <a href="javascript:void(0);"
+                                class="dropdown-toggle btn btn-white d-inline-flex align-items-center"
+                                data-bs-toggle="dropdown">
+                                Sort By : Last 7 Days
+                            </a>
+                            <ul class="dropdown-menu  dropdown-menu-end p-3">
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Recently Added</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Ascending</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Desending</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Last Month</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item rounded-1">Last 7 Days</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-xl-3">
-                    <div class="stat-card p-3 d-flex align-items-center gap-3">
-                        <div class="avatar avatar-md rounded-3 bg-info-subtle text-info d-flex align-items-center justify-content-center fs-20">
-                            <i class="ti ti-calendar-event"></i>
-                        </div>
-                        <div>
-                            <span class="text-muted fs-12 fw-medium text-uppercase">Total Register Days</span>
-                            <h4 class="fw-bold text-dark mb-0 fs-20">{{ count($dates) }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-xl-3">
-                    <div class="stat-card p-3 d-flex align-items-center gap-3">
-                        <div class="avatar avatar-md rounded-3 bg-success-subtle text-success d-flex align-items-center justify-content-center fs-20">
-                            <i class="ti ti-user-check"></i>
-                        </div>
-                        <div>
-                            <span class="text-muted fs-12 fw-medium text-uppercase">Total Present (P)</span>
-                            <h4 class="fw-bold text-success mb-0 fs-20">{{ $grandTotalPresent }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-xl-3">
-                    <div class="stat-card p-3 d-flex align-items-center gap-3">
-                        <div class="avatar avatar-md rounded-3 bg-danger-subtle text-danger d-flex align-items-center justify-content-center fs-20">
-                            <i class="ti ti-user-x"></i>
-                        </div>
-                        <div>
-                            <span class="text-muted fs-12 fw-medium text-uppercase">Total Absent (A)</span>
-                            <h4 class="fw-bold text-danger mb-0 fs-20">{{ $grandTotalAbsent }}</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attendance Register Matrix Card -->
-            <div class="matrix-card mb-4">
-                <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
-                    <div class="d-flex align-items-center gap-3">
-                        <h5 class="fw-bold text-dark mb-0">Register Matrix</h5>
-                        <span class="badge bg-light text-muted border fs-11">{{ $dateRangeText }}</span>
-                    </div>
-
-                    <!-- Status Legend -->
-                    <div class="d-flex align-items-center gap-3 fs-12">
-                        <span class="d-flex align-items-center">
-                            <span class="badge-legend cell-p">P</span>
-                            <span class="text-muted">Present</span>
-                        </span>
-                        <span class="d-flex align-items-center">
-                            <span class="badge-legend cell-a">A</span>
-                            <span class="text-muted">Absent</span>
-                        </span>
-                        <span class="d-flex align-items-center">
-                            <span class="badge-legend" style="background-color: #fef3c7; color: #92400e;">W</span>
-                            <span class="text-muted">Weekend</span>
-                        </span>
-                    </div>
-                </div>
-
                 <div class="card-body p-0">
-                    <div class="register-table-wrapper">
-                        <table class="register-table">
-                            <thead>
-                                <tr>
-                                    <th class="sticky-col-1" rowspan="2" style="width: 50px;">#</th>
-                                    <th class="sticky-col-2" rowspan="2" style="min-width: 220px;">Employee</th>
-                                    <th rowspan="2" style="min-width: 140px;">Agency</th>
-                                    <th rowspan="2" style="min-width: 130px;">Designation</th>
+                    <div class="custom-datatable-filter table-responsive">
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="DataTables_Table_0_length"><label>Row Per Page
+                                            <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                                class="form-select form-select-sm">
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select> Entries</label></div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div id="DataTables_Table_0_filter" class="dataTables_filter"><label> <input
+                                                type="search" class="form-control form-control-sm" placeholder="Search"
+                                                aria-controls="DataTables_Table_0"></label></div>
+                                </div>
+                            </div>
+                            <div class="row dt-row">
+                                <div class="col-sm-12 table-responsive">
+                                    <table class="table datatable dataTable no-footer" id="DataTables_Table_0"
+                                        aria-describedby="DataTables_Table_0_info">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th class="sorting sorting_asc" tabindex="0"
+                                                    aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                    aria-sort="ascending"
+                                                    aria-label="Date: activate to sort column descending"
+                                                    style="width: 132.538px;">Date</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Check In: activate to sort column ascending"
+                                                    style="width: 104.775px;">Check In</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Status: activate to sort column ascending"
+                                                    style="width: 119.287px;">Status</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Check Out: activate to sort column ascending"
+                                                    style="width: 112.55px;">Check Out</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Break: activate to sort column ascending"
+                                                    style="width: 79.9125px;">Break</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Late: activate to sort column ascending"
+                                                    style="width: 79.9125px;">Late</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Overtime: activate to sort column ascending"
+                                                    style="width: 102.037px;">Overtime</th>
+                                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Production Hours: activate to sort column ascending"
+                                                    style="width: 178.587px;">Production Hours</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    {{-- Day number headers --}}
-                                    @foreach ($dates as $d)
-                                        <th class="{{ $d['is_weekend'] ? 'weekend-col' : '' }}" style="width: 38px;">
-                                            <span class="fs-12">{{ $d['day'] }}</span>
-                                        </th>
-                                    @endforeach
 
-                                    {{-- Summary Columns --}}
-                                    <th class="col-summary-p" rowspan="2" style="width: 50px;" title="Total Present Days">P</th>
-                                    <th class="col-summary-a" rowspan="2" style="width: 50px;" title="Total Absent Days">A</th>
-                                    <th rowspan="2" style="width: 65px;" title="Attendance Percentage">%</th>
-                                </tr>
-                                <tr>
-                                    {{-- Weekday name headers --}}
-                                    @foreach ($dates as $d)
-                                        <th class="{{ $d['is_weekend'] ? 'weekend-col' : '' }}" style="font-size: 9px; font-weight: normal;">
-                                            {{ substr($d['day_name'], 0, 2) }}
-                                        </th>
-                                    @endforeach
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($rows as $index => $row)
-                                    <tr>
-                                        <td class="sticky-col-1 text-muted fs-12">{{ $index + 1 }}</td>
-                                        <td class="sticky-col-2">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="avatar avatar-xs rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-bold fs-11" style="width: 28px; height: 28px;">
-                                                    {{ strtoupper(substr($row['employee_name'], 0, 2)) }}
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold text-dark fs-12">{{ $row['employee_name'] }}</div>
-                                                    <div class="text-muted fs-10">{{ $row['employee_email'] }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if ($row['agency_name'] !== 'Direct / In-House')
-                                                <span class="badge border fs-10" style="background-color: #f3e8ff; color: #7e22ce; border-color: #e9d5ff !important;">
-                                                    {{ $row['agency_name'] }}
-                                                </span>
-                                            @else
-                                                <span class="badge bg-light text-muted border fs-10">
-                                                    Direct
-                                                </span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-light text-secondary border fs-10">
-                                                {{ $row['designation_name'] }}
-                                            </span>
-                                        </td>
 
-                                        {{-- Daily Attendance Matrix Cells --}}
-                                        @foreach ($dates as $d)
-                                            @php
-                                                $status = $row['attendance'][$d['date']] ?? 'A';
-                                            @endphp
-                                            <td style="{{ $d['is_weekend'] ? 'background-color: #fffbeb;' : '' }}">
-                                                @if ($status === 'P')
-                                                    <span class="cell-p" title="{{ $d['date'] }}: Present">P</span>
-                                                @else
-                                                    <span class="cell-a" title="{{ $d['date'] }}: Absent">A</span>
-                                                @endif
-                                            </td>
-                                        @endforeach
 
-                                        {{-- Summary Values --}}
-                                        <td class="col-summary-p">
-                                            <span class="fw-bold text-success">{{ $row['total_present'] }}</span>
-                                        </td>
-                                        <td class="col-summary-a">
-                                            <span class="fw-bold text-danger">{{ $row['total_absent'] }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge {{ $row['percentage'] >= 75 ? 'bg-success-subtle text-success' : ($row['percentage'] >= 50 ? 'bg-warning-subtle text-warning' : 'bg-danger-subtle text-danger') }} border fs-11 font-monospace">
-                                                {{ $row['percentage'] }}%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="{{ count($dates) + 7 }}" class="text-center py-5">
-                                            <div class="avatar avatar-xl rounded-circle bg-light text-muted mx-auto mb-3 d-flex align-items-center justify-content-center">
-                                                <i class="ti ti-calendar-off fs-28"></i>
-                                            </div>
-                                            <h6 class="fw-bold text-dark mb-1">No Attendance Records Found</h6>
-                                            <p class="text-muted fs-13 mb-0">Try changing your filters or choosing another month.</p>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                            @if (count($rows) > 0)
-                                <tfoot class="bg-light fw-bold text-dark">
-                                    {{-- Daily Total Present Row --}}
-                                    <tr>
-                                        <th class="sticky-col-1 text-center text-success fs-11">P</th>
-                                        <th class="sticky-col-2 text-success fs-12">Daily Present (P)</th>
-                                        <th colspan="2" class="text-muted fs-11 text-end pe-2">Daily Count:</th>
-                                        @foreach ($dates as $d)
-                                            <th class="text-success fs-11 {{ $d['is_weekend'] ? 'weekend-col' : '' }}">
-                                                {{ $dailyTotals[$d['date']]['P'] ?? 0 }}
-                                            </th>
-                                        @endforeach
-                                        <th class="col-summary-p fs-12">{{ $grandTotalPresent }}</th>
-                                        <th class="text-muted">-</th>
-                                        <th class="text-muted">-</th>
-                                    </tr>
-                                    {{-- Daily Total Absent Row --}}
-                                    <tr>
-                                        <th class="sticky-col-1 text-center text-danger fs-11">A</th>
-                                        <th class="sticky-col-2 text-danger fs-12">Daily Absent (A)</th>
-                                        <th colspan="2" class="text-muted fs-11 text-end pe-2">Daily Count:</th>
-                                        @foreach ($dates as $d)
-                                            <th class="text-danger fs-11 {{ $d['is_weekend'] ? 'weekend-col' : '' }}">
-                                                {{ $dailyTotals[$d['date']]['A'] ?? 0 }}
-                                            </th>
-                                        @endforeach
-                                        <th class="text-muted">-</th>
-                                        <th class="col-summary-a fs-12">{{ $grandTotalAbsent }}</th>
-                                        <th class="text-muted">-</th>
-                                    </tr>
-                                </tfoot>
-                            @endif
-                        </table>
+
+
+
+
+
+
+                                            <tr class="odd">
+                                                <td class="sorting_1">
+                                                    02 Sep 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    09:17 PM
+                                                </td>
+                                                <td>14 Min</td>
+                                                <td>
+                                                    12 Min
+                                                </td>
+                                                <td>-</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.35Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="even">
+                                                <td class="sorting_1">
+                                                    06 Jul 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    07:13 PM
+                                                </td>
+                                                <td>32 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>-</td>
+                                                <td>
+                                                    <span class="badge badge-info d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>9.15 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="sorting_1">
+                                                    10 Dec 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-danger-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Absent
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    09:23 PM
+                                                </td>
+                                                <td>10 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>45 Min</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>9.25 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="even">
+                                                <td class="sorting_1">
+                                                    12 Apr 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    06:43 PM
+                                                </td>
+                                                <td>23 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>10 Min</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.22 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="sorting_1">
+                                                    14 Jan 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    06:45 PM
+                                                </td>
+                                                <td>30 Min</td>
+                                                <td>
+                                                    32 Min
+                                                </td>
+                                                <td>20 Min</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.55 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="even">
+                                                <td class="sorting_1">
+                                                    15 Mar 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    06:23 PM
+                                                </td>
+                                                <td>41 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>50 Min</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.35 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="sorting_1">
+                                                    15 Nov 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    08:15 PM
+                                                </td>
+                                                <td>12 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>-</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.35Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="even">
+                                                <td class="sorting_1">
+                                                    20 Apr 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    07:15 PM
+                                                </td>
+                                                <td>03 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>-</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.32 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="sorting_1">
+                                                    20 Feb 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    06:13 PM
+                                                </td>
+                                                <td>50 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>33 Min</td>
+                                                <td>
+                                                    <span class="badge badge-success d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>8.45 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="even">
+                                                <td class="sorting_1">
+                                                    21 Jan 2024
+                                                </td>
+                                                <td>09:00 AM</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-success-transparent d-inline-flex align-items-center">
+                                                        <i class="ti ti-point-filled me-1"></i>Present
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    06:12 PM
+                                                </td>
+                                                <td>20 Min</td>
+                                                <td>
+                                                    -
+                                                </td>
+                                                <td>45 Min</td>
+                                                <td>
+                                                    <span class="badge badge-danger d-inline-flex align-items-center">
+                                                        <i class="ti ti-clock-hour-11 me-1"></i>7.54 Hrs
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5">
+                                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status"
+                                        aria-live="polite">Showing 1 - 10 of 10 entries</div>
+                                </div>
+                                <div class="col-sm-12 col-md-7">
+                                    <div class="dataTables_paginate paging_simple_numbers"
+                                        id="DataTables_Table_0_paginate">
+                                        <ul class="pagination">
+                                            <li class="paginate_button page-item previous disabled"
+                                                id="DataTables_Table_0_previous"><a aria-controls="DataTables_Table_0"
+                                                    aria-disabled="true" role="link" data-dt-idx="previous"
+                                                    tabindex="-1" class="page-link"><i class="ti ti-chevron-left"></i>
+                                                </a></li>
+                                            <li class="paginate_button page-item active"><a href="#"
+                                                    aria-controls="DataTables_Table_0" role="link" aria-current="page"
+                                                    data-dt-idx="0" tabindex="0" class="page-link">1</a></li>
+                                            <li class="paginate_button page-item next disabled"
+                                                id="DataTables_Table_0_next"><a aria-controls="DataTables_Table_0"
+                                                    aria-disabled="true" role="link" data-dt-idx="next"
+                                                    tabindex="-1" class="page-link"><i
+                                                        class="ti ti-chevron-right"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <div class="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
+            <p class="mb-0">2014 - 2025 © EMS.</p>
+            <p>Designed &amp; Developed By <a href="javascript:void(0);" class="text-primary">Dreams</a></p>
+        </div>
+
     </div>
+    <div class="modal fade" id="attendance_report">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Attendance</h4>
+						<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+							<i class="ti ti-x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="card shadow-none bg-transparent-light">
+							<div class="card-body pb-1">
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="mb-3">
+											<span>Date</span>
+											<p class="text-gray-9 fw-medium">15 Apr 2025</p>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="mb-3">
+											<span>Punch in at</span>
+											<p class="text-gray-9 fw-medium">09:00 AM</p>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="mb-3">
+											<span>Punch out at</span>
+											<p class="text-gray-9 fw-medium">06:45 PM</p>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="mb-3">
+											<span>Status</span>
+											<p class="text-gray-9 fw-medium">Present</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card shadow-none border mb-0">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-xl-3">
+										<div class="mb-4">
+											<p class="d-flex align-items-center mb-1"><i class="ti ti-point-filled text-dark-transparent me-1"></i>Total Working hours</p>
+											<h3>12h 36m</h3>
+										</div>
+									</div>
+									<div class="col-xl-3">
+										<div class="mb-4">
+											<p class="d-flex align-items-center mb-1"><i class="ti ti-point-filled text-success me-1"></i>Productive Hours</p>
+											<h3>08h 36m</h3>
+										</div>
+									</div>
+									<div class="col-xl-3">
+										<div class="mb-4">
+											<p class="d-flex align-items-center mb-1"><i class="ti ti-point-filled text-warning me-1"></i>Break hours</p>
+											<h3>22m 15s</h3>
+										</div>
+									</div>
+									<div class="col-xl-3">
+										<div class="mb-4">
+											<p class="d-flex align-items-center mb-1"><i class="ti ti-point-filled text-info me-1"></i>Overtime</p>
+											<h3>02h 15m</h3>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-8 mx-auto">
+										<div class="progress bg-transparent-dark mb-3" style="height: 24px;">
+											<div class="progress-bar bg-success rounded me-2" role="progressbar" style="width: 18%;"></div>
+											<div class="progress-bar bg-warning rounded me-2" role="progressbar" style="width: 5%;"></div>
+											<div class="progress-bar bg-success rounded me-2" role="progressbar" style="width: 28%;"></div>
+											<div class="progress-bar bg-warning rounded me-2" role="progressbar" style="width: 17%;"></div>
+											<div class="progress-bar bg-success rounded me-2" role="progressbar" style="width: 22%;"></div>
+											<div class="progress-bar bg-warning rounded me-2" role="progressbar" style="width: 5%;"></div>
+											<div class="progress-bar bg-info rounded me-2" role="progressbar" style="width: 3%;"></div>
+											<div class="progress-bar bg-info rounded" role="progressbar" style="width: 2%;"></div>
+										</div>
+										
+									</div>
+									<div class="co-md-12">
+										<div class="d-flex align-items-center justify-content-between">
+											<span class="fs-10">06:00</span>
+											<span class="fs-10">07:00</span>
+											<span class="fs-10">08:00</span>
+											<span class="fs-10">09:00</span>
+											<span class="fs-10">10:00</span>
+											<span class="fs-10">11:00</span>
+											<span class="fs-10">12:00</span>
+											<span class="fs-10">01:00</span>
+											<span class="fs-10">02:00</span>
+											<span class="fs-10">03:00</span>
+											<span class="fs-10">04:00</span>
+											<span class="fs-10">05:00</span>
+											<span class="fs-10">06:00</span>
+											<span class="fs-10">07:00</span>
+											<span class="fs-10">08:00</span>
+											<span class="fs-10">09:00</span>
+											<span class="fs-10">10:00</span>
+											<span class="fs-10">11:00</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 @endsection

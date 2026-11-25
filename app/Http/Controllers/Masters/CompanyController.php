@@ -13,22 +13,33 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        $data['title'] = 'Company List';
-        $data['titleRoute']='Masters / Organisation / Company';
+        $data['title'] = 'Organization List';
+        $data['companyExists'] = Company::exists();
+        $data['titleRoute'] = 'Masters / Organization';
         $data['imageUrl'] = "https://picsum.photos/200/200?random=" . rand(1, 1000);
         return view('home.company.index', $data);
     }
 
     public function create()
     {
+        if (Company::exists()) {
+            return redirect()->route('masters.organisation.company')
+                ->with('error', 'Only one organization can be added.');
+        }
+
         $data['country'] = Country::all();
-        $data['title'] = 'Master/ Organisation / Company';
+        $data['title'] = 'Create Organization';
         $data['imageUrl'] = "https://picsum.photos/200/200?random=" . rand(1, 1000);
         return view('home.company.create', $data);
     }
 
     public function store(Request $request)
     {
+        if (Company::exists()) {
+            return redirect()->route('masters.organisation.company')
+                ->with('error', 'Only one organization can be added.');
+        }
+
         $validatedData = $request->validate([
             'company_name' => 'required|string|max:255',
             'company_code' => 'nullable|string|max:255|unique:companies,company_code',
@@ -37,8 +48,10 @@ class CompanyController extends Controller
             'email' => 'required|email|unique:companies,email',
             'gst_no' => 'nullable|string|max:50',
             'pan_no' => 'nullable|string|max:50',
+            'tan_no' => 'nullable|string|max:50',
             'cin_no' => 'nullable|string|max:50',
             'iec' => 'nullable|string|max:50',
+            'duns_no' => 'nullable|string|max:50',
             'website' => 'nullable|url|max:255',
             'company_logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'address' => 'required|string',
@@ -47,6 +60,11 @@ class CompanyController extends Controller
             'city' => 'required',
             'pincode' => 'required|string|max:10',
             'status' => 'required|in:Active,Inactive',
+        ], [
+            'company_logo.image' => 'Organization logo must be an image file.',
+            'company_logo.mimes' => 'Organization logo must be a PNG, JPG or JPEG file.',
+            'company_logo.max' => 'Organization logo must not be larger than 2 MB.',
+            'company_logo.uploaded' => 'Organization logo must not be larger than 2 MB.',
         ]);
 
         $company = new Company();
@@ -57,8 +75,10 @@ class CompanyController extends Controller
         $company->email = $validatedData['email'];
         $company->gst_no = $validatedData['gst_no'] ?? null;
         $company->pan_no = $validatedData['pan_no'] ?? null;
+        $company->tan_no = $validatedData['tan_no'] ?? null;
         $company->cin_no = $validatedData['cin_no'] ?? null;
         $company->iec = $validatedData['iec'] ?? null;
+        $company->duns_no = $validatedData['duns_no'] ?? null;
         $company->website = $validatedData['website'] ?? null;
         $company->address = $validatedData['address'];
         $company->country = $validatedData['country'];
@@ -145,8 +165,10 @@ class CompanyController extends Controller
             'website' => $company->website,
             'gst_no' => $company->gst_no,
             'pan_no' => $company->pan_no,
+            'tan_no' => $company->tan_no,
             'cin_no' => $company->cin_no,
             'iec' => $company->iec,
+            'duns_no' => $company->duns_no,
             'address' => $company->address,
             'country' => optional($company->countryDetail)->name,
             'state' => optional($company->stateDetail)->name,
@@ -163,7 +185,7 @@ class CompanyController extends Controller
     {
         $data['company'] = Company::findOrFail($id);
         $data['country'] = Country::all();
-        $data['title'] = 'Edit Company';
+        $data['title'] = 'Edit Organization';
         return view('home.company.edit', $data);
     }
 
@@ -179,8 +201,10 @@ class CompanyController extends Controller
             'email' => 'required|email|unique:companies,email,' . $company->id,
             'gst_no' => 'nullable|string|max:50',
             'pan_no' => 'nullable|string|max:50',
+            'tan_no' => 'nullable|string|max:50',
             'cin_no' => 'nullable|string|max:50',
             'iec' => 'nullable|string|max:50',
+            'duns_no' => 'nullable|string|max:50',
             'website' => 'nullable|url|max:255',
             'company_logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'address' => 'required|string',
@@ -189,6 +213,11 @@ class CompanyController extends Controller
             'city' => 'required',
             'pincode' => 'required|string|max:10',
             'status' => 'required|in:Active,Inactive',
+        ], [
+            'company_logo.image' => 'Organization logo must be an image file.',
+            'company_logo.mimes' => 'Organization logo must be a PNG, JPG or JPEG file.',
+            'company_logo.max' => 'Organization logo must not be larger than 2 MB.',
+            'company_logo.uploaded' => 'Organization logo must not be larger than 2 MB.',
         ]);
 
         $company->company_name = Str::title($validatedData['company_name']);
@@ -198,8 +227,10 @@ class CompanyController extends Controller
         $company->email = $validatedData['email'];
         $company->gst_no = $validatedData['gst_no'] ?? null;
         $company->pan_no = $validatedData['pan_no'] ?? null;
+        $company->tan_no = $validatedData['tan_no'] ?? null;
         $company->cin_no = $validatedData['cin_no'] ?? null;
         $company->iec = $validatedData['iec'] ?? null;
+        $company->duns_no = $validatedData['duns_no'] ?? null;
         $company->website = $validatedData['website'] ?? null;
         $company->address = $validatedData['address'];
         $company->country = $validatedData['country'];
@@ -225,11 +256,8 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         $company = Company::findOrFail($id);
-        if ($company->company_logo && file_exists(public_path('uploads/company/' . $company->company_logo))) {
-            unlink(public_path('uploads/company/' . $company->company_logo));
-        }
-        $company->delete();
+        $company->delete(); // soft delete (logo file is kept so the record can be restored)
 
-        return response()->json(['success' => true, 'message' => 'Company deleted successfully']);
+        return response()->json(['success' => true, 'message' => 'Organization deleted successfully']);
     }
 }

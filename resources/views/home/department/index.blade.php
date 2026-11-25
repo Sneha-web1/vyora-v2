@@ -33,7 +33,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sn</th>
-                                            <th>Company</th>
+                                            <th>Organization</th>
                                             <th>Branch</th>
                                             <th>Department Name</th>
                                             <th>Category</th>

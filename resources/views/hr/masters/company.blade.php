@@ -9,11 +9,11 @@
             <!-- Breadcrumb -->
             <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
                 <div class="my-auto mb-2">
-                    <h2 class="mb-1">Company</h2>
+                    <h2 class="mb-1">Organization</h2>
                     <nav>
                         <ol class="breadcrumb mb-0">
 
-                            <li class="breadcrumb-item active" aria-current="page">Company Profie</li>
+                            <li class="breadcrumb-item active" aria-current="page">Organization Profie</li>
                         </ol>
                     </nav>
                 </div>
@@ -34,7 +34,7 @@
 								</div>                                              
 								<div class="profile-upload">
 									<div class="mb-2">
-										<h6 class="mb-1">Upload Company Logo</h6>
+										<h6 class="mb-1">Upload Organization Logo</h6>
 										<p class="fs-12">Image should be below 4 mb</p>
 									</div>
 									<div class="profile-uploader d-flex align-items-center">
@@ -50,7 +50,7 @@
 						</div>
 						<div class="col-md-6">
 							<div class="mb-3">
-								<label class="form-label">Company Name <span class="text-danger"> *</span></label>
+								<label class="form-label">Organization Name <span class="text-danger"> *</span></label>
 								<input type="text" class="form-control">
 							</div>									
 						</div>

@@ -32,11 +32,11 @@
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label class="form-label" for="filter_company_id">Company</label>
+                                    <label class="form-label" for="filter_company_id">Organization</label>
                                     <select class="form-control select2" id="filter_company_id">
-                                        <option value="">All Companies</option>
+                                        <option value="">All Organizations</option>
                                         @foreach ($companies as $company)
-                                            <option value="{{ $company->id }}">{{ $company->company_name }}</option>
+                                            <option value="{{ $company->id }}" {{ $loop->count === 1 ? 'selected' : '' }}>{{ $company->company_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -46,11 +46,13 @@
                                     <thead>
                                         <tr>
                                             <th>Sn</th>
-                                            <th>Company Name</th>
+                                            <th>Organization Name</th>
                                             <th>Branch Name</th>
                                             <th>Branch Code</th>
                                             <th>Branch owner Name</th>
                                             <th>Contact No</th>
+                                            <th>Email</th>
+                                            <th>Pincode</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -136,6 +138,12 @@
                     },
                     {
                         data: 'contact_number'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'pincode'
                     },
 
                     {

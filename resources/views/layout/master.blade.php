@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/plugins/%40simonwep/pickr/themes/nano.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
-
+    @include('layout.focus-style')
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
@@ -202,7 +202,7 @@
                                                     <a href="#"
                                                         class="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
                                                         <span class="d-flex align-items-center me-3">
-                                                            <i class="ti ti-building text-default me-2"></i>Companies
+                                                            <i class="ti ti-building text-default me-2"></i>Organizations
                                                         </span>
                                                         <i class="ti ti-arrow-right"></i>
                                                     </a>

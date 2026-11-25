@@ -103,11 +103,11 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $employee->employee_name }}</td>
-                                            <td>{{ $employee->employee_email ?: '--' }}</td>
+                                            <td>{{ $employee->masked_email ?: '--' }}</td>
                                             <td>{{ $employee->agency->agency_name ?? 'Direct / In-House' }}</td>
                                             <td>{{ $designationNames[$employee->designation_id] ?? '--' }}</td>
                                             <td>{{ $employee->employment_type ?: '--' }}</td>
-                                            <td>{{ $employee->employee_mobile ?: '--' }}</td>
+                                            <td>{{ $employee->masked_mobile ?: '--' }}</td>
                                             <td><span class="badge {{ $isActive ? 'bg-success' : 'bg-danger' }}">{{ $isActive ? 'Active' : 'Inactive' }}</span></td>
                                             <td>
                                                 <button type="button" class="btn" title="Change Agency"

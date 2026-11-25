@@ -100,10 +100,10 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-3">
-                                        <label class="form-label">Company *</label>
+                                        <label class="form-label">Organization *</label>
                                         <select class="form-control" name="company_id" required>
                                             @foreach ($company as $companys)
-                                                 <option value="{{ $companys->id }}">{{ $companys->company_name }}</option>
+                                                 <option value="{{ $companys->id }}" {{ $loop->first ? 'selected' : '' }}>{{ $companys->company_name }}</option>
                                             @endforeach
                                           
                                         </select>

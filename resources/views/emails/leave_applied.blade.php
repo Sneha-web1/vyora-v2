@@ -37,7 +37,7 @@
 
         <!-- Footer -->
         <div style="background:#f1f1f1; padding:15px; font-size:12px; text-align:center; color:#555;">
-            © {{ date('Y') }} {{ $companyDetails[0]->company_name ?? 'Our Company' }}
+            © {{ date('Y') }} {{ $companyDetails[0]->company_name ?? 'Our Organization' }}
             | Powered by Neural Info Solutions Private Limited
         </div>
 

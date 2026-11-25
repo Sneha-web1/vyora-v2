@@ -36,9 +36,9 @@
                                 @method('PUT')
                                 <div class="form-row row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Company Name *</label>
+                                        <label class="form-label">Organization Name *</label>
                                         <select class="form-control select2" name="company_id" required>
-                                            <option value="">Select Company</option>
+                                            <option value="">Select Organization</option>
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}"
                                                     {{ $branch->company_id == $company->id ? 'selected' : '' }}>
@@ -67,11 +67,13 @@
                                         <input type="text" class="form-control" name="contact_number"
                                             value="{{ $branch->contact_number }}" required>
                                     </div>
-                                    
+
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Address *</label>
-                                        <textarea class="form-control" rows="2" name="address_1" required>{{ $branch->address_1 }}</textarea>
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email"
+                                            value="{{ $branch->email }}" placeholder="Enter Email (Optional)">
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Country *</label>
                                         <select class="form-control select2" id="country" name="country" required>
@@ -84,17 +86,30 @@
                                             @endforeach
                                         </select>
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">State *</label>
                                         <select class="form-control select2" id="state" name="state"
                                             required></select>
                                     </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">City *</label>
                                         <select class="form-control select2" id="city" name="city"
                                             required></select>
                                     </div>
-                                    
+
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">Address *</label>
+                                        <textarea class="form-control" rows="2" name="address_1" required>{{ $branch->address_1 }}</textarea>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Pincode</label>
+                                        <input type="text" class="form-control" name="pincode"
+                                            value="{{ $branch->pincode }}" placeholder="Enter Pincode (Optional)">
+                                    </div>
+
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Status *</label>
                                         <select class="form-control select2" name="status" required>

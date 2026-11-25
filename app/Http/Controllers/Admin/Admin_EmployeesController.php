@@ -9,9 +9,11 @@ use App\Models\CountryState;
 use App\Models\StateCity;
 use App\Models\Designation;
 use App\Models\Employee;
+use App\Models\EmployeeFamilyMember;
 use App\Models\Shift;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -80,8 +82,7 @@ class Admin_EmployeesController extends Controller
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('employee_name', 'like', "%{$search}%")
-                        ->orWhere('employee_email', 'like', "%{$search}%")
-                        ->orWhere('employee_mobile', 'like', "%{$search}%");
+                        ->orWhereEmployeeContact($search);
                 });
             }
 
@@ -101,7 +102,7 @@ class Admin_EmployeesController extends Controller
                 $rows[] = [
                     'DT_RowIndex' => $start + $index + 1,
                     'employee'    => '<div><span class="fw-medium">' . e($emp->employee_name) . '</span>'
-                        . '<div class="text-muted fs-12">' . e($emp->employee_email ?: '--') . '</div></div>',
+                        . '<div class="text-muted fs-12">' . e($emp->masked_email ?: '--') . '</div></div>',
                     'agency'      => $agency,
                     'designation' => e($designation),
                     'joining_date' => $joining,
@@ -172,7 +173,7 @@ class Admin_EmployeesController extends Controller
     {
         $request->validate([
             'employee_name' => 'required|string|max:255',
-            'employee_email' => 'required|email|unique:employees,employee_email',
+            'employee_email' => ['required', 'email', new \App\Rules\UniqueEmployeeEmail()],
             'employee_mobile' => 'required',
             'employee_password' => 'required|string|min:6',
             'employee_gender' => 'required|in:1,2,3',
@@ -189,7 +190,9 @@ class Admin_EmployeesController extends Controller
             'supervisor_id' => 'nullable|exists:employees,employee_id',
             'status' => 'required',
             'profile_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+            'address' => 'required|string|max:1000',
+            'notice_period_days' => 'required|integer|min:0|max:180',
+        ] + $this->familyRules() + $this->dpdpRules(true), $this->extraMessages(), $this->extraAttributes());
 
         $image_name = null;
         if ($request->hasFile('profile_image')) {
@@ -206,7 +209,8 @@ class Admin_EmployeesController extends Controller
 
         $supervisorId = $request->filled('supervisor_id') ? $request->supervisor_id : null;
 
-        Employee::create([
+        DB::transaction(function () use ($request, $image_name, $isSupervisor, $supervisorId) {
+        $employee = Employee::create([
             'employee_name' => $request->employee_name,
             'employee_email' => $request->employee_email,
             'employee_mobile' => $request->employee_mobile,
@@ -227,7 +231,12 @@ class Admin_EmployeesController extends Controller
             'supervisor_id' => $supervisorId,
             'status' => $request->status,
             'profile_image' => $image_name,
-        ]);
+            'address' => $request->address,
+            'notice_period_days' => (int) $request->notice_period_days,
+        ] + $this->dpdpPayload($request));
+
+        $this->syncFamilyMembers($employee, (array) $request->input('family_members', []));
+        });
 
         return redirect()->route('employees.index')->with('success', 'Employee Added Successfully');
     }
@@ -274,7 +283,7 @@ class Admin_EmployeesController extends Controller
                 $errors[] = "Row {$line}: invalid email ({$rec['employee_email']}).";
                 continue;
             }
-            if (Employee::withTrashed()->where('employee_email', $rec['employee_email'])->exists()) {
+            if (Employee::withTrashed()->whereEmailIs($rec['employee_email'])->exists()) {
                 $errors[] = "Row {$line}: {$rec['employee_email']} already exists.";
                 continue;
             }
@@ -532,8 +541,7 @@ class Admin_EmployeesController extends Controller
         $supervisor = Employee::where('is_supervisor', 1)
             ->where(function ($q) use ($cleanVal) {
                 $q->where('employee_name', 'like', "%{$cleanVal}%")
-                  ->orWhere('employee_email', 'like', "%{$cleanVal}%")
-                  ->orWhere('employee_mobile', 'like', "%{$cleanVal}%");
+                  ->orWhereEmployeeContact($cleanVal);
             })
             ->first();
 
@@ -544,10 +552,9 @@ class Admin_EmployeesController extends Controller
         // Search any employee by name, email, or mobile (excluding current employee)
         $emp = Employee::where(function ($q) use ($cleanVal) {
                 $q->where('employee_name', 'like', "%{$cleanVal}%")
-                  ->orWhere('employee_email', 'like', "%{$cleanVal}%")
-                  ->orWhere('employee_mobile', 'like', "%{$cleanVal}%");
+                  ->orWhereEmployeeContact($cleanVal);
             })
-            ->when($employeeEmail, fn($q) => $q->where('employee_email', '!=', $employeeEmail))
+            ->when($employeeEmail, fn($q) => $q->where(fn($w) => $w->where('employee_email_bidx', '!=', Employee::blindIndex($employeeEmail, 'email'))->orWhereNull('employee_email_bidx')))
             ->first();
 
         return $emp ? $emp->employee_id : null;
@@ -604,7 +611,7 @@ class Admin_EmployeesController extends Controller
 
     public function edit($employee_id)
     {
-        $employee = Employee::where('employee_id', $employee_id)->firstOrFail();
+        $employee = Employee::with('familyMembers')->where('employee_id', $employee_id)->firstOrFail();
 
         $data['title'] = 'Edit Employee';
         $data['employee'] = $employee;
@@ -652,7 +659,7 @@ class Admin_EmployeesController extends Controller
 
         $request->validate([
             'employee_name'   => 'required|string|max:255',
-            'employee_email'  => 'required|email|unique:employees,employee_email,' . $employee_id . ',employee_id',
+            'employee_email'  => ['required', 'email', new \App\Rules\UniqueEmployeeEmail((int) $employee_id)],
             'employee_mobile' => 'required',
             'employee_gender' => 'required',
             'blood_group'     => 'nullable|string|max:10',
@@ -663,10 +670,18 @@ class Admin_EmployeesController extends Controller
             'shift_id'        => 'nullable|exists:shifts,id',
             'is_supervisor'   => 'nullable',
             'supervisor_id'   => 'nullable|exists:employees,employee_id',
-            'status'          => 'required'
-        ]);
+            'status'          => 'required',
+            'address'         => 'required|string|max:1000',
+            'notice_period_days' => 'required|integer|min:0|max:180',
+        ] + $this->familyRules() + $this->dpdpRules(false, $request->boolean('dpdp_consent_given') && !$employee->dpdp_consent_given),
+        $this->extraMessages(), $this->extraAttributes());
 
-        $data = $request->all();
+        // consent fields & family rows are handled explicitly below, never mass-assigned from the request
+        $data = $request->except([
+            'family_members', 'dpdp_privacy_notice_ack', 'dpdp_consent_given', 'dpdp_sharing_consent',
+            'dpdp_consent_mode', 'dpdp_consent_date', 'dpdp_consent_at', 'dpdp_consent_version',
+            'dpdp_consent_ip', 'dpdp_consent_recorded_by',
+        ]);
         $data['agency_id'] = $request->filled('agency_id') ? $request->agency_id : null;
         $data['shift_id'] = $request->filled('shift_id') ? $request->shift_id : ($employee->shift_id ?: (Shift::where('status', 'Active')->value('id') ?? 1));
         $data['week_off_days'] = $request->filled('week_off_days') ? array_values((array)$request->input('week_off_days')) : null;
@@ -695,7 +710,15 @@ class Admin_EmployeesController extends Controller
             unset($data['profile_image']);
         }
 
-        $employee->update($data);
+        // Record DPDP consent once (a recorded consent is never overwritten from this form)
+        if (!$employee->dpdp_consent_given && $request->boolean('dpdp_consent_given')) {
+            $data += $this->dpdpPayload($request);
+        }
+
+        DB::transaction(function () use ($employee, $data, $request) {
+            $employee->update($data);
+            $this->syncFamilyMembers($employee, (array) $request->input('family_members', []));
+        });
 
         if (isset($data['status'])) {
             if ($data['status'] === 'Inactive' || $data['status'] === '0') {
@@ -716,6 +739,107 @@ class Admin_EmployeesController extends Controller
         }
 
         return redirect()->route('employees.index')->with('success', 'Employee Updated Successfully');
+    }
+
+    /** At least two family members, each with name / phone / relation. */
+    private function familyRules(): array
+    {
+        return [
+            'family_members'            => 'required|array|min:2',
+            'family_members.*.id'       => 'nullable|integer',
+            'family_members.*.name'     => 'required|string|max:150',
+            'family_members.*.phone'    => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s()]{7,20}$/'],
+            'family_members.*.relation' => 'required|string|in:' . implode(',', EmployeeFamilyMember::RELATIONS),
+        ];
+    }
+
+    /**
+     * DPDP consent rules. On create everything is mandatory (sharing consent stays optional);
+     * on edit it is only validated when consent is being recorded now.
+     */
+    private function dpdpRules(bool $isCreate, bool $recordingNow = false): array
+    {
+        if ($isCreate || $recordingNow) {
+            return [
+                'dpdp_privacy_notice_ack' => 'accepted',
+                'dpdp_consent_given'      => 'accepted',
+                'dpdp_sharing_consent'    => 'nullable',
+                'dpdp_consent_mode'       => 'required|in:Written,Electronic',
+                'dpdp_consent_date'       => 'required|date|before_or_equal:today',
+            ];
+        }
+
+        return [];
+    }
+
+    private function dpdpPayload(Request $request): array
+    {
+        $date = Carbon::parse($request->input('dpdp_consent_date', today()->toDateString()))
+            ->setTimeFrom(now());
+
+        return [
+            'dpdp_privacy_notice_ack'  => 1,
+            'dpdp_consent_given'       => 1,
+            'dpdp_sharing_consent'     => $request->boolean('dpdp_sharing_consent') ? 1 : 0,
+            'dpdp_consent_mode'        => $request->input('dpdp_consent_mode'),
+            'dpdp_consent_at'          => $date,
+            'dpdp_consent_version'     => 'DPDP-v1',
+            'dpdp_consent_ip'          => $request->ip(),
+            'dpdp_consent_recorded_by' => optional(auth()->user())->name ?? 'Admin',
+        ];
+    }
+
+    /** Create / update / (soft) delete family rows so the employee ends up with exactly the submitted list. */
+    private function syncFamilyMembers(Employee $employee, array $rows): void
+    {
+        $existing = $employee->familyMembers()->get()->keyBy('id');
+        $keepIds = [];
+
+        foreach ($rows as $row) {
+            $attrs = [
+                'name'     => trim($row['name'] ?? ''),
+                'phone'    => trim($row['phone'] ?? ''),
+                'relation' => $row['relation'] ?? '',
+            ];
+
+            $id = $row['id'] ?? null;
+            if ($id && $existing->has((int) $id)) {
+                $existing[(int) $id]->update($attrs);
+                $keepIds[] = (int) $id;
+            } else {
+                $created = $employee->familyMembers()->create($attrs);
+                $keepIds[] = $created->id;
+            }
+        }
+
+        foreach ($existing as $id => $member) {
+            if (!in_array($id, $keepIds, true)) {
+                $member->delete(); // soft delete
+            }
+        }
+    }
+
+    private function extraMessages(): array
+    {
+        return [
+            'family_members.required' => 'Details of at least two family members are required.',
+            'family_members.min'      => 'Details of at least two family members are required.',
+            'dpdp_privacy_notice_ack.accepted' => 'Please confirm that the Privacy Notice was shared with the employee.',
+            'dpdp_consent_given.accepted'      => 'DPDP consent of the employee is required.',
+        ];
+    }
+
+    private function extraAttributes(): array
+    {
+        return [
+            'family_members.*.name'     => 'family member name',
+            'family_members.*.phone'    => 'family member phone number',
+            'family_members.*.relation' => 'family member relation',
+            'notice_period_days'        => 'notice period',
+            'address'                   => 'full address',
+            'dpdp_consent_mode'         => 'consent mode',
+            'dpdp_consent_date'         => 'consent date',
+        ];
     }
 
     public function destroy($employee_id)
@@ -772,7 +896,7 @@ class Admin_EmployeesController extends Controller
             return [
                 'employee_id' => $sub->employee_id,
                 'employee_name' => $sub->employee_name,
-                'employee_email' => $sub->employee_email,
+                'employee_email' => \App\Models\Employee::maskEmail($sub->employee_email),
                 'designation_name' => $sub->designation?->name ?? 'Staff',
                 'agency_name' => $sub->agency ? $sub->agency->agency_name : 'Direct / In-House',
                 'status' => $sub->status,
@@ -783,8 +907,8 @@ class Admin_EmployeesController extends Controller
         $data = [
             'employee_id' => $employee->employee_id,
             'employee_name' => $employee->employee_name,
-            'employee_email' => $employee->employee_email,
-            'employee_mobile' => $employee->employee_mobile,
+            'employee_email' => \App\Models\Employee::maskEmail($employee->employee_email),
+            'employee_mobile' => \App\Models\Employee::maskMobile($employee->employee_mobile),
             'employee_gender' => $employee->employee_gender,
             'blood_group' => $employee->blood_group ?: '-',
             'joining_date' => $employee->joining_date,

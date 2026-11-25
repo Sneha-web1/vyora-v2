@@ -79,7 +79,7 @@
                                 <option value="">-- Choose Employee --</option>
                                 @foreach ($employees as $employee)
                                     <option value="{{ $employee->employee_id }}">
-                                        {{ $employee->employee_name }} ({{ $employee->employee_email }})
+                                        {{ $employee->employee_name }} ({{ $employee->masked_email }})
                                     </option>
                                 @endforeach
                             </select>

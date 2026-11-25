@@ -97,6 +97,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    // DPDP: separate secret for the PII blind-index (HMAC). Set in .env, never change after go-live.
+    'pii_index_key' => env('PII_INDEX_KEY'),
+
     'key' => env('APP_KEY'),
 
     'previous_keys' => [

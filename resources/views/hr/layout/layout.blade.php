@@ -65,6 +65,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/plugins/%40simonwep/pickr/themes/nano.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
+    @include('layout.focus-style')
     {{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/dataTables.bootstrap5.min.css') }}"> --}}
 
 
@@ -158,7 +159,7 @@
                                                     <a href="#"
                                                         class="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
                                                         <span class="d-flex align-items-center me-3">
-                                                            <i class="ti ti-building text-default me-2"></i>Companies
+                                                            <i class="ti ti-building text-default me-2"></i>Organizations
                                                         </span>
                                                         <i class="ti ti-arrow-right"></i>
                                                     </a>
@@ -369,7 +370,7 @@
                                                 <div>
                                                     <h5 class="mb-0">Kevin Larry</h5>
                                                     <p class="fs-12 fw-medium mb-0"><a
-                                                            href="https://smarthr.co.in/cdn-cgi/l/email-protection"
+                                                            href="javascript:void(0);"
                                                             class="__cf_email__"
                                                             data-cfemail="99eef8ebebfcf7d9fce1f8f4e9f5fcb7faf6f4">[email&#160;protected]</a>
                                                     </p>
@@ -577,7 +578,7 @@
                                             <a href="javascript:void(0);">Organisation<span
                                                     class="menu-arrow inside-submenu"></span></a>
                                             <ul>
-                                                <li><a href="">Company</a></li>
+                                                <li><a href="">Organization</a></li>
                                                 <li><a href="">Branch</a></li>
                                                 <li><a href="">Department</a>
                                                 </li>

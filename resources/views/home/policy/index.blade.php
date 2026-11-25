@@ -37,7 +37,7 @@
                                     <th>Sn</th>
                                     <th>Policy Title</th>
                                     <th>Policy Code</th>
-                                    <th>Company</th>
+                                    <th>Organization</th>
                                     <th>Branch</th>
                                     <th>Department</th>
                                     <th>Start Date</th>
@@ -98,7 +98,7 @@
 
                         <h6 class="mb-3">Policy Information</h6>
                         <div class="row mb-3">
-                            <div class="col-md-4 mb-3"><div class="text-muted small">Company</div><div class="fw-medium" id="v_company"></div></div>
+                            <div class="col-md-4 mb-3"><div class="text-muted small">Organization</div><div class="fw-medium" id="v_company"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">Branch</div><div class="fw-medium" id="v_branch"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">Department</div><div class="fw-medium" id="v_department"></div></div>
                             <div class="col-md-4 mb-3"><div class="text-muted small">Start Date</div><div class="fw-medium" id="v_effective_from"></div></div>

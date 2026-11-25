@@ -268,11 +268,13 @@
                             </div>
                         </div>
 
+
+                        @include('admin.employee.partials.family-details', ['employee' => $employee ?? null])
                         <div class="form-section-divider"></div>
 
-                        <!-- SECTION 2: WORK & DESIGNATION DETAILS -->
+                        <!-- SECTION 3: WORK & DESIGNATION DETAILS -->
                         <div class="employee-section-header">
-                            <i class="ti ti-briefcase text-primary"></i> 2. Designation & Employment Terms
+                            <i class="ti ti-briefcase text-primary"></i> 3. Designation & Employment Terms
                         </div>
 
                         <div class="row g-3">
@@ -389,9 +391,9 @@
 
                         <div class="form-section-divider"></div>
 
-                        <!-- SECTION 3: POSTING LOCATION -->
+                        <!-- SECTION 4: POSTING LOCATION -->
                         <div class="employee-section-header">
-                            <i class="ti ti-map-pin text-primary"></i> 3. Posting Location Details
+                            <i class="ti ti-map-pin text-primary"></i> 4. Posting Location Details
                         </div>
 
                         <div class="row g-3">
@@ -430,9 +432,9 @@
 
                         <div class="form-section-divider"></div>
 
-                        <!-- SECTION 4: PROFILE IMAGE UPLOAD -->
+                        <!-- SECTION 5: PROFILE IMAGE UPLOAD -->
                         <div class="employee-section-header">
-                            <i class="ti ti-photo text-primary"></i> 4. Profile Picture
+                            <i class="ti ti-photo text-primary"></i> 5. Profile Picture
                         </div>
 
                         <div class="row">
@@ -460,6 +462,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        @include('admin.employee.partials.extra-details', ['employee' => $employee ?? null])
 
                         <!-- Submit Footer Bar -->
                         <div class="d-flex align-items-center justify-content-end gap-2 mt-4 pt-3 border-top">
