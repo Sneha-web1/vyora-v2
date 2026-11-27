@@ -69,12 +69,6 @@ return [
             [
                 'key' => 'attendance.register', 'title' => 'Attendance Register', 'route' => 'attendance.register.index',
             ],
-            [
-                'key' => 'attendance.reports', 'title' => 'Attendance Reports', 'route' => 'attendance.attendance-dashboard.org-reports',
-            ],
-            [
-                'key' => 'attendance.consistent', 'title' => 'Consistent Attendees', 'route' => 'attendance.daily-attendance.consistent-attendees',
-            ],
         ],
     ],
 

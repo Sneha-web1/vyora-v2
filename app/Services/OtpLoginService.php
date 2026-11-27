@@ -17,12 +17,11 @@ use Illuminate\Support\Facades\Mail;
  *   employee   -> employees table, identified by registered email
  *
  * The OTP is mailed to the account's registered email. Only an HMAC of the OTP is cached
- * (5 min, max 5 wrong tries, 60 s resend cooldown).
+ * (5 min, max 5 wrong tries). OTPs can be sent repeatedly.
  */
 class OtpLoginService
 {
     public const TTL = 300;
-    public const COOLDOWN = 60;
     public const MAX_ATTEMPTS = 5;
 
     /** @return array{user:mixed,guard:string,email:string,name:string,key:string}|null */
@@ -85,17 +84,12 @@ class OtpLoginService
     }
 
     /**
-     * Generate + mail an OTP. Does nothing while the resend cooldown is running.
-     * Returns 'sent' | 'cooldown' | 'mail_failed: <reason>' (the reason is only shown to the user when APP_DEBUG=true).
+     * Generate + mail an OTP.
+     * Returns 'sent' | 'mail_failed: <reason>' (the reason is only shown to the user when APP_DEBUG=true).
      */
     public function send(array $account): string
     {
         $k = $account['key'];
-
-        if (!Cache::add("otp_cd:$k", 1, self::COOLDOWN)) {
-            Log::info("Login OTP: resend cooldown active for $k - no new OTP sent");
-            return 'cooldown';
-        }
 
         $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         Cache::put("otp:$k", ['h' => $this->hash($otp), 'n' => 0], self::TTL);
@@ -108,7 +102,6 @@ class OtpLoginService
             Mail::to($account['email'])->send(new LoginOtpMail($account['name'], $otp, (int) (self::TTL / 60)));
         } catch (\Throwable $e) {
             Cache::forget("otp:$k");
-            Cache::forget("otp_cd:$k");
             Log::error('Login OTP mail failed: ' . $e->getMessage());
             return 'mail_failed: ' . $e->getMessage();
         }
@@ -138,7 +131,6 @@ class OtpLoginService
         }
 
         Cache::forget("otp:$k");
-        Cache::forget("otp_cd:$k");
 
         return true;
     }

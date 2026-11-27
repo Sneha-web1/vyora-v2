@@ -470,7 +470,7 @@ Route::get('/', function () {
 });
 // Email-OTP login (Super Admin, every role panel, Employee)
 Route::post('/login-otp/send', [\App\Http\Controllers\Auth\OtpLoginController::class, 'send'])
-    ->middleware('throttle:6,1')->name('login.otp.send');
+    ->name('login.otp.send');
 Route::post('/login-otp/verify', [\App\Http\Controllers\Auth\OtpLoginController::class, 'verify'])
     ->middleware('throttle:10,1')->name('login.otp.verify');
 Route::get('/superadmin/login', function () {
@@ -529,6 +529,9 @@ Route::prefix('employee')->middleware('auth:employee')->group(function () {
     // Attendance & Holidayssettings
     Route::get('attendance', [AttendanceCotroller::class, 'index'])->name('employee.attendance');
     Route::post('attendance/punch', [AttendanceCotroller::class, 'punch'])->name('employee.attendance.punch');
+    Route::get('attendance/month-chart', [AttendanceCotroller::class, 'monthChart'])->name('employee.attendance.month-chart');
+    Route::get('attendance/list', [AttendanceCotroller::class, 'list'])->name('employee.attendance.list');
+    Route::get('attendance/export', [AttendanceCotroller::class, 'export'])->name('employee.attendance.export');
     Route::get('attendance/register', [AttendanceCotroller::class, 'register'])->name('employee.attendance.register');
 
     // Resignation & Exit Management

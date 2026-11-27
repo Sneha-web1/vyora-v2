@@ -27,7 +27,18 @@ class OtpLoginController extends Controller
         if (!$account) {
             Log::warning('Login OTP: account not found', ['context' => $data['context']]);
         } else {
-            $this->otp->send($account);
+            $result = $this->otp->send($account);
+
+            if (str_starts_with($result, 'mail_failed:')) {
+                $message = config('app.debug')
+                    ? trim(substr($result, strlen('mail_failed:')))
+                    : 'Unable to send the OTP right now. Please try again.';
+
+                return response()->json([
+                    'ok' => false,
+                    'message' => $message,
+                ]);
+            }
         }
 
         // same answer whether or not the account exists (no account enumeration)

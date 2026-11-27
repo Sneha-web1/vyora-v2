@@ -381,10 +381,8 @@
 
                                 <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center"
                                     data-bs-toggle="dropdown">
-                                    <span class="avatar avatar-sm online">
-
-                                        <img src="{{ asset('frontend/assets/img/profiles/avatar-12.jpg') }}"
-                                            alt="Img" class="img-fluid rounded-circle">
+                                    <span class="avatar avatar-sm avatar-rounded online bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center">
+                                        <i class="ti ti-user fs-16"></i>
                                     </span>
                                 </a>
 
@@ -392,9 +390,8 @@
                                     <div class="card mb-0">
                                         <div class="card-header">
                                             <div class="d-flex align-items-center">
-                                                <span class="avatar avatar-lg me-2 avatar-rounded">
-                                                    <img src="{{ asset('frontend/assets/img/profiles/avatar-12.jpg') }}"
-                                                        alt="img">
+                                                <span class="avatar avatar-lg me-2 avatar-rounded bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center">
+                                                    <i class="ti ti-user fs-24"></i>
                                                 </span>
                                                 <div>
                                                     <h5 class="mb-0">

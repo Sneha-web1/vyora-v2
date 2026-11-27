@@ -52,7 +52,7 @@
         var idField = document.querySelector('input[name="' + fieldName + '"]');
         var h2 = form.querySelector('h2'), sub = h2 ? h2.nextElementSibling : null;
         var h2Text = h2 ? h2.textContent : '', subText = sub ? sub.textContent : '';
-        var otpEmail = '', timer = null, hidden = [];
+        var otpEmail = '', hidden = [];
 
         function setHeading(t, s) { if (h2) h2.textContent = t; if (sub) sub.textContent = s; }
 
@@ -97,7 +97,6 @@
         }
 
         function toNormal() {
-            clearInterval(timer);
             showOthers();
             show('otpStartBox');
             setHeading(h2Text, subText);
@@ -113,18 +112,6 @@
             }).then(function (r) { return r.json().then(function (j) { j._status = r.status; return j; }); });
         }
 
-        function startCooldown() {
-            var left = 60, a = $('otpResend');
-            a.style.pointerEvents = 'none';
-            a.textContent = 'Resend OTP in 60s';
-            clearInterval(timer);
-            timer = setInterval(function () {
-                left--;
-                a.textContent = left > 0 ? 'Resend OTP in ' + left + 's' : 'Resend OTP';
-                if (left <= 0) { clearInterval(timer); a.style.pointerEvents = ''; }
-            }, 1000);
-        }
-
         function sendOtp() {
             if (!emailRe.test(otpEmail)) { msg('Please enter a valid email address.', false); return; }
             var btns = [$('otpStartBtn'), $('otpSendBtn')];
@@ -134,8 +121,8 @@
                 btns.forEach(function (b) { b.disabled = false; });
                 if (j._status === 429) { $('otpResend').style.pointerEvents = ''; msg('Too many requests. Please wait a minute.', false); return; }
                 if (j._status === 422) { $('otpResend').style.pointerEvents = ''; msg('Please enter a valid email address.', false); return; }
+                if (!j.ok) { $('otpResend').style.pointerEvents = ''; msg(j.message || 'Unable to send the OTP. Please try again.', false); return; }
                 clearMsg();
-                startCooldown();
             }).catch(function () {
                 btns.forEach(function (b) { b.disabled = false; });
                 $('otpResend').style.pointerEvents = '';
