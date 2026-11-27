@@ -31,7 +31,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3">
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <label class="form-label" for="filter_company_id">Organization</label>
                                     <select class="form-control select2" id="filter_company_id">
                                         <option value="">All Organizations</option>
@@ -39,7 +39,7 @@
                                             <option value="{{ $company->id }}" {{ $loop->count === 1 ? 'selected' : '' }}>{{ $company->company_name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="table-responsive mt-3">
                                 <table id="comnayList" class="display table table-striped table-bordered nowrap">
