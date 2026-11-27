@@ -20,8 +20,9 @@
         }
 
         .card-icon {
-            width: 70px;
-            height: 70px;
+            font-size: 52px;
+            color: #332c6d;
+            line-height: 1;
             margin-bottom: 12px;
             transition: transform 0.3s ease;
         }
@@ -56,8 +57,7 @@
                 min-height: 140px;
             }
             .card-icon {
-                width: 60px;
-                height: 60px;
+                font-size: 44px;
             }
         }
     </style>
@@ -75,7 +75,7 @@
                 <!-- Card 1 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="custom-card text-center">
-                        <img src="{{ asset('frontend/assets/img/SelfAssessment.png') }}" class="card-icon" alt="">
+                        <i class="ti ti-clipboard-check card-icon" aria-hidden="true"></i>
                         <a href="{{ route('employee.competencies') }}" class="badge-custom">Start Self Appraisal</a>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                 <!-- Card 2 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="custom-card text-center">
-                        <img src="{{ asset('frontend/assets/img/ControlingReview.png') }}" class="card-icon" alt="">
+                        <i class="ti ti-users card-icon" aria-hidden="true"></i>
                         <a href="{{ route('employee.review.employee') }}" class="badge-custom">Review your Employee</a>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                 <!-- Card 3 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="custom-card text-center">
-                        <img src="{{ asset('frontend/assets/img/GiveFeedback.png') }}" class="card-icon" alt="">
+                        <i class="ti ti-message-2 card-icon" aria-hidden="true"></i>
                         <a href="{{ route('employee.view-feedback') }}" class="badge-custom">View your CO Feedback</a>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                 <!-- Card 4 -->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="custom-card text-center">
-                        <img src="{{ asset('frontend/assets/img/SubmitFeedback.png') }}" class="card-icon" alt="">
+                        <i class="ti ti-send card-icon" aria-hidden="true"></i>
                         <a href="{{ route('employee.feedback') }}" class="badge-custom">Submit your Feedback</a>
                     </div>
                 </div>
