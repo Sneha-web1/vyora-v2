@@ -192,7 +192,7 @@ class Admin_EmployeesController extends Controller
             'profile_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'address' => 'required|string|max:1000',
             'notice_period_days' => 'required|integer|min:0|max:180',
-        ] + $this->familyRules() + $this->dpdpRules(true), $this->extraMessages(), $this->extraAttributes());
+        ] + $this->familyRules(), $this->extraMessages(), $this->extraAttributes());
 
         $image_name = null;
         if ($request->hasFile('profile_image')) {
@@ -233,7 +233,7 @@ class Admin_EmployeesController extends Controller
             'profile_image' => $image_name,
             'address' => $request->address,
             'notice_period_days' => (int) $request->notice_period_days,
-        ] + $this->dpdpPayload($request));
+        ]);
 
         $this->syncFamilyMembers($employee, (array) $request->input('family_members', []));
         });
@@ -754,8 +754,8 @@ class Admin_EmployeesController extends Controller
     }
 
     /**
-     * DPDP consent rules. On create everything is mandatory (sharing consent stays optional);
-     * on edit it is only validated when consent is being recorded now.
+     * DPDP consent rules are applied only when consent is being recorded on edit.
+     * The create form does not collect or require DPDP consent.
      */
     private function dpdpRules(bool $isCreate, bool $recordingNow = false): array
     {
