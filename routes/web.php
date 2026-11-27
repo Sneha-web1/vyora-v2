@@ -473,8 +473,12 @@ Route::post('/login-otp/send', [\App\Http\Controllers\Auth\OtpLoginController::c
     ->middleware('throttle:6,1')->name('login.otp.send');
 Route::post('/login-otp/verify', [\App\Http\Controllers\Auth\OtpLoginController::class, 'verify'])
     ->middleware('throttle:10,1')->name('login.otp.verify');
-Route::get('/superadmin/login', [AuthController::class, 'index'])->name('login.form');
+Route::get('/superadmin/login', function () {
+    return redirect('/vyora-control-portal');
+})->name('login.form');
 Route::post('/superadmin/login', [AuthController::class, 'login'])->name('login');
+Route::get('/vyora-control-portal', [AuthController::class, 'index'])->name('vyora.control.portal.login');
+Route::post('/vyora-control-portal', [AuthController::class, 'login'])->name('vyora.control.portal.login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // // Employee

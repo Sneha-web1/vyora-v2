@@ -124,7 +124,7 @@
                                     @endif
                                 </div>
 
-                                <form action="{{ route('login') }}" method="POST" class="vh-100">
+                                <form action="{{ request()->is('vyora-control-portal') ? route('vyora.control.portal.login.submit') : route('login') }}" method="POST" class="vh-100">
                                     @csrf
                                     <div class="vh-100 d-flex flex-column justify-content-between p-4 pb-0">
                                         <div class="logo-text mx-auto mt-4 mb-5 text-center">

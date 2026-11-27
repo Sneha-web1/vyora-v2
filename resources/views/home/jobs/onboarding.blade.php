@@ -324,10 +324,13 @@
                         <!-- Profile Image + CV -->
                         <div class="col-md-2 text-center mb-3">
 
-                            <div>
-                                <img src="{{ asset($candidate->candidate_image) }}"
+                            <div class="d-flex justify-content-center">
+                                {{-- <img src="{{ asset($candidate->candidate_image) }}"
                                     style="width:90px;height:110px;border-radius:0;border:4px solid #332c6d;object-fit:contain;box-shadow:0 4px 10px rgba(0,0,0,0.15);"
-                                    alt="Candidate Image" />
+                                    alt="Candidate Image" /> --}}
+                                    <div style="width:90px;height:110px;border:4px solid #332c6d;display:flex;align-items:center;justify-content:center;background:#f3f3f8;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+            <i class="fa-solid fa-user" style="font-size:45px;color:#332c6d;"></i>
+        </div>
 
                             </div>
 

@@ -45,6 +45,7 @@
 
         .rp .form-control, .rp .form-select { border-radius:6px; font-size:14px; padding:9px 12px; }
         .rp .form-control:focus, .rp .form-select:focus { border-color:var(--p); box-shadow:0 0 0 3px rgba(45,39,101,.12); }
+        .rp .role-filter-select + .select2-container { width:230px !important; min-width:0 !important; flex:0 0 230px; }
         .rp label.fl { font-size:14px; font-weight:600; color:#1f2430; margin-bottom:6px; }
 
         /* matrix */
@@ -177,7 +178,7 @@
                     <hr class="my-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="m-0">Users</h5>
-                        <select id="userRoleFilter" class="form-select" style="width:230px;font-size:13px;">
+                        <select id="userRoleFilter" class="form-select select2 role-filter-select" style="width:230px;font-size:13px;">
                             <option value="">All roles</option>
                             @foreach ($roles->reject(fn ($r) => $r->isEmployeeRole()) as $r)
                                 <option value="{{ $r->id }}">{{ $r->name }} ({{ $userCounts[$r->id] ?? 0 }})</option>
@@ -347,9 +348,15 @@
 
     // ---- users list filter ----
     var uf = document.getElementById('userRoleFilter');
-    function filterUsers() { document.querySelectorAll('#userTable tbody tr[data-role]').forEach(function (r) { r.style.display = !uf.value || r.dataset.role === uf.value ? '' : 'none'; }); }
-    uf.addEventListener('change', filterUsers);
-    document.querySelectorAll('.btn-users').forEach(function (b) { b.onclick = function () { uf.value = b.dataset.role; filterUsers(); go('user'); document.getElementById('userTable').scrollIntoView({behavior: 'smooth'}); }; });
+    $('#userRoleFilter').select2({width: '230px', minimumResultsForSearch: 0});
+    function filterUsers() {
+        var roleId = String($(uf).val() || '');
+        document.querySelectorAll('#userTable tbody tr[data-role]').forEach(function (r) {
+            r.style.display = !roleId || r.dataset.role === roleId ? '' : 'none';
+        });
+    }
+    $(uf).on('change', filterUsers);
+    document.querySelectorAll('.btn-users').forEach(function (b) { b.onclick = function () { $(uf).val(b.dataset.role).trigger('change'); go('user'); document.getElementById('userTable').scrollIntoView({behavior: 'smooth'}); }; });
 
     // ---- user form ----
     document.getElementById('pwEye').onclick = function () { var i = document.getElementById('pw'); i.type = i.type === 'password' ? 'text' : 'password'; };
